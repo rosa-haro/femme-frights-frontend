@@ -15,23 +15,60 @@ const SignInSignUpComponent = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [registerInfo, setRegisterInfo] = useState({})
+    const [error, setError] = useState('')
     
-    const signIn = async () => {
-        const userInfo = await signInFetch(username, password)
-        console.log(userInfo)
-        dispatch(signInAction(userInfo))
-        console.log("You're logged in.")
-        goHome()
+    const validateSignInFields = () => {
+        setError("");
+        if (!username || !password) {
+            setError("Username and password are required.")
+            return false
+        }
+        return true;
+    };
+
+    const validateSignUpFields = () => {
+        setError("");
+        if (!registerInfo.name || !registerInfo.lastName || !registerInfo.username || !registerInfo.email || !registerInfo.password) {
+            setError("All (*) fields are required.");
+            return false;
+        }
+        if (registerInfo.password.length < 8) {
+            setError("Password must be at least 8 characters long.");
+            return false;
+        }
+        return true;
     }
 
+    const signIn = async () => {
+        if (!validateSignInFields()) return;
+        try {
+            const userInfo = await signInFetch(username, password);
+            if (!userInfo) {
+                setError("Invalid username or password.");
+                return;
+            }
+            dispatch(signInAction(userInfo));
+            goHome();
+        } catch (error) {
+            setError(error.message || "An error occurred while signing in.");
+        }
+    };
+    
+
     const signUp = async () => {
-        const userInfo = await signUpFetch(registerInfo)
-        dispatch(
-            signUpAction(userInfo)
-        )
-        console.log("You signed up.")
-        goHome()
-    }
+        if (!validateSignUpFields()) return;
+        try {
+            const userInfo = await signUpFetch(registerInfo);
+            if (!userInfo) {
+                setError("Signup failed. Try again.");
+                return;
+            }
+            dispatch(signUpAction(userInfo));
+            goHome();
+        } catch (error) {
+            setError(error.message || "An error occurred while signing up.");
+        }
+    };
 
     const registerInputHandler = (name, value) => {
         setRegisterInfo({
@@ -40,14 +77,13 @@ const SignInSignUpComponent = () => {
         })
     }
 
-
     const goHome = () => {
         navigate("/")
     }
 
   return (
     <>
-
+    {error && <div>{error}</div>}
     { pathname === "/signin" ? (
 
     <div>
@@ -70,23 +106,23 @@ const SignInSignUpComponent = () => {
 
     <div>
         <div>
-            <span>Name: </span>
+            <span>Name (*): </span>
             <input type="text" placeholder='Name' name='name' onChange={(e) => registerInputHandler(e.target.name, e.target.value)} />
         </div>
         <div>
-            <span>Last name: </span>
+            <span>Last name (*): </span>
             <input type="text" placeholder='Lastname' name='lastName' onChange={(e) => registerInputHandler(e.target.name, e.target.value)} />
         </div>
         <div>
-            <span>Username: </span>
+            <span>Username (*): </span>
             <input type="username" placeholder='Username' name='username' onChange={(e) => registerInputHandler(e.target.name, e.target.value)} />
         </div>
         <div>
-            <span>E-mail: </span>
+            <span>E-mail (*): </span>
             <input type="email" placeholder='Email' name='email' onChange={(e) => registerInputHandler(e.target.name, e.target.value)} />
         </div>
         <div>
-            <span>Password: </span>
+            <span>Password (*): </span>
             <input type="password" placeholder='Password' name='password' onChange={(e) => registerInputHandler(e.target.name, e.target.value)} />
         </div>
         <div>
