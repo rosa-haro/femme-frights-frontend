@@ -8,12 +8,14 @@ import LoginPage from './pages/login/LoginPage'
 import ProfilePage from './pages/profile/ProfilePage'
 import SignupPage from './pages/signup/SignupPage'
 import HomePage from './pages/home/HomePage'
+import MainLayout from './layouts/MainLayout'
 
 function App() {
 
   return (
     <Provider store={store}>
       <BrowserRouter>
+      <MainLayout>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -22,6 +24,7 @@ function App() {
         <Route path="/myprofile" element={<ProfilePage />} />
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
+      </MainLayout>
     </BrowserRouter>
     </Provider>
   )
