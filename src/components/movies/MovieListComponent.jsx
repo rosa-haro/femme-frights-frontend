@@ -43,10 +43,15 @@ const MovieListComponent = () => {
               ) : null}
             </div>
             <div>
+            <span>Year: </span>
               <span>{m.year}</span>
             </div>
             <div>
+                <span>Director: </span>
               <span>{m.director}</span>
+            </div>
+            <div>
+            <button onClick={() => goToDetails(m._id)}>Details</button>
             </div>
           </div>
         ))

@@ -1,7 +1,8 @@
-import { LOAD_ALL_MOVIES } from "./MoviesActions";
+import { LOAD_ALL_MOVIES, LOAD_ONE_MOVIE } from "./MoviesActions";
 
 const initialState = {
     movies: [],
+    selectedMovie: undefined,
 };
 
 const moviesReducer = (state = initialState, action) => {
@@ -11,6 +12,11 @@ const moviesReducer = (state = initialState, action) => {
                 ...state,
                 movies: action.payload,
             };
+        case LOAD_ONE_MOVIE:
+            return {
+                ...state,
+                selectedMovie: action.payload
+            }
         
         default:
             return state;
