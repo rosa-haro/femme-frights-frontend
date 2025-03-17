@@ -12,7 +12,7 @@ const HeaderComponent = () => {
   return (
     <header>
       <div>
-      <img src={new URL("null", import.meta.url).href} alt="Femme Frights logo" />
+      <img src={new URL("../../../public/logo.png", import.meta.url).href} alt="Femme Frights logo" />
       <h1>Femme Frights</h1>
       <button onClick={goToSignIn}>Sign In</button>
       </div>
