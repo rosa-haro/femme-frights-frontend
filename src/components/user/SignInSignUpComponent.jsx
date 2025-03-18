@@ -16,6 +16,13 @@ const SignInSignUpComponent = () => {
     const [password, setPassword] = useState('')
     const [registerInfo, setRegisterInfo] = useState({})
     const [error, setError] = useState('')
+
+    const handleFileChange = (e) => {
+        setRegisterInfo({
+            ...registerInfo,
+            profilePicture: e.target.files[0],
+        })
+    }
     
     const validateSignInFields = () => {
         setError("");
@@ -127,7 +134,7 @@ const SignInSignUpComponent = () => {
         </div>
         <div>
             <span>Profile picture: </span>
-            <span>Upload your picture here.</span>
+            <input type="file" accept="image/*" onChange={handleFileChange} />
         </div>
         <div>
             <button onClick={signUp}>Sign up</button>
