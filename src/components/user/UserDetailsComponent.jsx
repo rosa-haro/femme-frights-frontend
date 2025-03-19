@@ -9,7 +9,6 @@ import {
   deleteUserAction,
   getUserDetailsAction,
   signOutAction,
-  togglePasswordVisibility,
 } from "./UserActions";
 import { useNavigate } from "react-router-dom";
 import { activateEditMode } from "../../core/redux/reducers/global/GlobalActions";

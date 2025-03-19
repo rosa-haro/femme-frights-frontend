@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { signUpFetch, updateUserFetch } from "../../core/services/userFetch";
 import { signUpAction, updateUserAction } from "./UserActions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { activateEditMode } from "../../core/redux/reducers/global/GlobalActions";
 
@@ -9,6 +9,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { token } = useSelector((state) => state.userReducer)
   // Precargar datos si initialData existe (modo edición)
   const [registerInfo, setRegisterInfo] = useState(initialData || {});
   const [error, setError] = useState("");
@@ -66,10 +67,11 @@ const UserFormComponent = ({ initialData, onCancel }) => {
     try {
       if (initialData) {
         // Modo edición (Actualizar usuario)
-        const updatedUser = await updateUserFetch(
-          initialData.token,
-          registerInfo
-        );
+        if (!token) {
+          setError("Authentication error: No token found.");
+          return;
+        }
+        const updatedUser = await updateUserFetch(token, registerInfo); // 🔹 Ahora usamos el token correcto
         dispatch(updateUserAction(updatedUser));
         dispatch(activateEditMode(false)); // Salir del modo edición
       } else {
