@@ -4,7 +4,7 @@ import { signUpAction } from './UserActions';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-const SignupComponent = () => {
+const UserFormComponent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [registerInfo, setRegisterInfo] = useState({});
@@ -100,4 +100,4 @@ const SignupComponent = () => {
     );
 };
 
-export default SignupComponent;
+export default UserFormComponent;

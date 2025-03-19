@@ -9,17 +9,24 @@ import {
   togglePasswordVisibility,
 } from "./UserActions";
 import { useNavigate } from "react-router-dom";
+import { activateEditMode } from "../../core/redux/reducers/global/GlobalActions";
+import UserFormComponent from "./UserFormComponent";
 
 const UserDetailsComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
   const { user, token } = useSelector((state) => state.userReducer);
+  const { isEditing } = useSelector((state) => state.globalReducer)
 
   console.log("Redux Token:", token);
 
   const goHome = () => {
     navigate("/")
+  }
+
+  const handleEditMode = () => {
+    dispatch(activateEditMode(true))
   }
 
   const loadUserDetails = async () => {
@@ -66,6 +73,12 @@ const UserDetailsComponent = () => {
           <p>Loading...</p>
         </div>
       ) : (
+
+        isEditing ? (
+<UserFormComponent initialData={user} onCancel={handleEditMode} />
+
+        ) : (
+
         <div>
           <div>
             <img src={user.profilePicture} alt="User profile picture" />
@@ -91,11 +104,14 @@ const UserDetailsComponent = () => {
             <span>{"•".repeat(8)}</span>
           </div>
           <div>
-            <button onClick={() => {}}>Edit my profile</button>
+            <button onClick={handleEditMode}>Edit my profile</button>
             <button onClick={deleteUserHandler}>Delete my account</button>
           </div>
         </div>
-      )}
+      )
+        )}
+
+
     </div>
   );
 };
