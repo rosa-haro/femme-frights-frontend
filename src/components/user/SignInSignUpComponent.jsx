@@ -50,7 +50,8 @@ const SignInSignUpComponent = () => {
         if (!validateSignInFields()) return;
         try {
             const userInfo = await signInFetch(username, password);
-            if (!userInfo) {
+            console.log("Sign-in response:", userInfo)
+            if (!userInfo || !userInfo.token) {
                 setError("Invalid username or password.");
                 return;
             }
