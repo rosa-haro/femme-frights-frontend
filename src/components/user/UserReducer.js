@@ -3,6 +3,7 @@ import { GET_USER_DETAILS, SIGN_IN, SIGN_UP, SIGN_OUT, TOGGLE_PASSWORD_VISIBILIT
 const initialState = {
     user: undefined,
     token: undefined,
+    isLogged: false,
     isPasswordVisible: false,
 }
 
@@ -12,7 +13,8 @@ const userReducer = (state = initialState, action) => {
         console.log("SIGN_IN Reducer triggered with:", action.payload)
         return {...state,
             user: action.payload.user,
-            token: action.payload.token
+            token: action.payload.token,
+            isLogged: true,
         }
     case SIGN_UP:
     case GET_USER_DETAILS:
@@ -32,6 +34,7 @@ const userReducer = (state = initialState, action) => {
             ...state,
             user: undefined,
             token: undefined,
+            isLogged: false,
         };
     case TOGGLE_PASSWORD_VISIBILITY:
         return {
