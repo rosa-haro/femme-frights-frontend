@@ -1,8 +1,9 @@
-import { GET_USER_DETAILS, SIGN_IN, SIGN_UP, SIGN_OUT } from "./UserActions"
+import { GET_USER_DETAILS, SIGN_IN, SIGN_UP, SIGN_OUT, TOGGLE_PASSWORD_VISIBILITY } from "./UserActions"
 
 const initialState = {
     user: undefined,
-    token: undefined, //undefined cuando no está logueado
+    token: undefined,
+    isPasswordVisible: false,
 }
 
 const userReducer = (state = initialState, action) => {
@@ -32,6 +33,11 @@ const userReducer = (state = initialState, action) => {
             user: undefined,
             token: undefined,
         };
+    case TOGGLE_PASSWORD_VISIBILITY:
+        return {
+            ...state,
+            isPasswordVisible: !state.isPasswordVisible
+        }
 
         default:
             return state;

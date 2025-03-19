@@ -2,6 +2,7 @@ export const SIGN_IN = "SIGN_IN"
 export const SIGN_UP = "SIGN_UP"
 export const GET_USER_DETAILS = "GET_USER_DETAILS"
 export const SIGN_OUT = "SIGN_OUT"
+export const TOGGLE_PASSWORD_VISIBILITY = "TOGGLE_PASSWORD_VISIBILITY"
 
 export const signInAction = (payload) => {
     return {
@@ -31,5 +32,12 @@ export const getUserDetailsAction = (payload) => {
 export const signOutAction = () => {
     return {
         type: SIGN_OUT
+    }
+}
+
+// No puedo implementarlo en myprofile, pero sí me serviría para el login/signup y para el editar
+export const togglePasswordVisibility = () => {
+    return {
+        type: TOGGLE_PASSWORD_VISIBILITY
     }
 }

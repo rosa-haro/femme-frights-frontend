@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { useLocation } from 'react-router-dom'
 import { getUserByIdFetch } from "../../core/services/userFetch";
-import { getUserDetailsAction, signOutAction } from "./UserActions";
+import { getUserDetailsAction, signOutAction, togglePasswordVisibility } from "./UserActions";
 
 const UserDetailsComponent = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const UserDetailsComponent = () => {
   const loadUserDetails = async () => {
     if (!token) {
       console.error("No hay token disponible. Cerrando sesión...");
-      dispatch(signOutAction()); // ✅ Deslogear si no hay token
+      dispatch(signOutAction()); 
       return;
     }
 
@@ -23,7 +23,7 @@ const UserDetailsComponent = () => {
       dispatch(getUserDetailsAction(auxUser));
     } catch (error) {
       console.error("Error obteniendo los detalles del usuario:", error);
-      dispatch(signOutAction()); // ✅ Cerrar sesión si hay error con el usuario
+      dispatch(signOutAction()); 
     }
   };
 
@@ -41,9 +41,33 @@ const UserDetailsComponent = () => {
         </div>
       ) : (
         <div>
+            <div>
+            <span>Profile picture: </span>
+            <span>{user.profilePicture}</span>
+          </div>
           <div>
             <span>Name: </span>
             <span>{user.name}</span>
+          </div>
+          <div>
+            <span>Last name: </span>
+            <span>{user.lastName}</span>
+          </div>
+          <div>
+            <span>Username: </span>
+            <span>{user.username}</span>
+          </div>
+          <div>
+            <span>Email: </span>
+            <span>{user.email}</span>
+          </div>
+          <div>
+            <span>Password: </span>
+            <span>{"•".repeat(8)}</span>
+            </div>
+          <div>
+            <button onClick={() => {}}>Edit my profile</button>
+            <button onClick={() => {}}>Delete my account</button>
           </div>
         </div>
       )}
