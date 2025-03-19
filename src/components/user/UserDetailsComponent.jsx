@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { useLocation } from 'react-router-dom'
-import { deleteLoggedUserFetch, getUserByIdFetch } from "../../core/services/userFetch";
+import {
+  deleteLoggedUserFetch,
+  getUserByIdFetch,
+} from "../../core/services/userFetch";
 import {
   deleteUserAction,
   getUserDetailsAction,
@@ -14,20 +17,20 @@ import UserFormComponent from "./UserFormComponent";
 
 const UserDetailsComponent = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { user, token } = useSelector((state) => state.userReducer);
-  const { isEditing } = useSelector((state) => state.globalReducer)
+  const { isEditing } = useSelector((state) => state.globalReducer);
 
   console.log("Redux Token:", token);
 
   const goHome = () => {
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   const handleEditMode = () => {
-    dispatch(activateEditMode(true))
-  }
+    dispatch(activateEditMode(true));
+  };
 
   const loadUserDetails = async () => {
     if (!token) {
@@ -48,23 +51,23 @@ const UserDetailsComponent = () => {
   const deleteUserHandler = async () => {
     try {
       await deleteLoggedUserFetch(token);
-      dispatch(deleteUserAction())
+      dispatch(deleteUserAction());
     } catch (error) {
-      console.error("Error deleting user:", error.message)
+      console.error("Error deleting user:", error.message);
     }
-    signOutHandler()
-  }
+    signOutHandler();
+  };
 
   const signOutHandler = () => {
-    dispatch(signOutAction())
-    goHome()
-  }
+    dispatch(signOutAction());
+    goHome();
+  };
 
   useEffect(() => {
     if (token) {
       loadUserDetails();
     }
-  }, [token]);
+  }, []);
 
   return (
     <div>
@@ -72,13 +75,9 @@ const UserDetailsComponent = () => {
         <div>
           <p>Loading...</p>
         </div>
+      ) : isEditing ? (
+        <UserFormComponent initialData={user} onCancel={handleEditMode} />
       ) : (
-
-        isEditing ? (
-<UserFormComponent initialData={user} onCancel={handleEditMode} />
-
-        ) : (
-
         <div>
           <div>
             <img src={user.profilePicture} alt="User profile picture" />
@@ -108,10 +107,7 @@ const UserDetailsComponent = () => {
             <button onClick={deleteUserHandler}>Delete my account</button>
           </div>
         </div>
-      )
-        )}
-
-
+      )}
     </div>
   );
 };
