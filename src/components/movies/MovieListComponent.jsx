@@ -39,7 +39,7 @@ const MovieListComponent = () => {
             <div>
               <span>{m.titleEnglish}</span>
               {m.titleEnglish !== m.titleOriginal ? (
-                <span>( {m.titleOriginal})</span>
+                <span> ({m.titleOriginal})</span>
               ) : null}
             </div>
             <div>

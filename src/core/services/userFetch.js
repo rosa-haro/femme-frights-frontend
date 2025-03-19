@@ -81,3 +81,29 @@ export const getUserByIdFetch = async (token) => {
     return null;
   }
 };
+
+export const deleteLoggedUserFetch = async (token) => {
+  if (!token) {
+    console.error("No token available in deleteLoggedUserFetch.");
+    return null;
+  }
+
+  try {
+    const res = await fetch(`${apiUrl}/users/myprofile`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": `${token}`
+      }
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Error: ${res.status} - ${errorText}`);
+    }
+
+    return { message: "User deleted successfully" };
+  } catch (error) {
+    throw error;
+  }
+};
