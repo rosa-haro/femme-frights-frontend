@@ -107,3 +107,30 @@ export const deleteLoggedUserFetch = async (token) => {
     throw error;
   }
 };
+
+export const updateUserFetch = async (token, updatedUserData) => {
+  if (!token) {
+    console.error("No token available in updateUserFetch.");
+    return null;
+  }
+
+  try {
+    const res = await fetch(`${apiUrl}/users/myprofile`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": token,
+      },
+      body: JSON.stringify(updatedUserData),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Error: ${res.status} - ${errorText}`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    throw error;
+  }
+};
