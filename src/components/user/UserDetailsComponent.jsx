@@ -2,19 +2,23 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { useLocation } from 'react-router-dom'
 import { getUserByIdFetch } from "../../core/services/userFetch";
-import { getUserDetailsAction, signOutAction, togglePasswordVisibility } from "./UserActions";
+import {
+  getUserDetailsAction,
+  signOutAction,
+  togglePasswordVisibility,
+} from "./UserActions";
 
 const UserDetailsComponent = () => {
   const dispatch = useDispatch();
 
   const { user, token } = useSelector((state) => state.userReducer);
 
-  console.log("Redux Token:", token)
+  console.log("Redux Token:", token);
 
   const loadUserDetails = async () => {
     if (!token) {
       console.error("No hay token disponible. Cerrando sesión...");
-      dispatch(signOutAction()); 
+      dispatch(signOutAction());
       return;
     }
 
@@ -23,7 +27,7 @@ const UserDetailsComponent = () => {
       dispatch(getUserDetailsAction(auxUser));
     } catch (error) {
       console.error("Error obteniendo los detalles del usuario:", error);
-      dispatch(signOutAction()); 
+      dispatch(signOutAction());
     }
   };
 
@@ -41,9 +45,8 @@ const UserDetailsComponent = () => {
         </div>
       ) : (
         <div>
-            <div>
-            <span>Profile picture: </span>
-            <span>{user.profilePicture}</span>
+          <div>
+            <img src={user.profilePicture} alt="User profile picture" />
           </div>
           <div>
             <span>Name: </span>
@@ -64,7 +67,7 @@ const UserDetailsComponent = () => {
           <div>
             <span>Password: </span>
             <span>{"•".repeat(8)}</span>
-            </div>
+          </div>
           <div>
             <button onClick={() => {}}>Edit my profile</button>
             <button onClick={() => {}}>Delete my account</button>
