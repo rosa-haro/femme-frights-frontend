@@ -1,4 +1,4 @@
-import { GET_USER_DETAILS, SIGN_IN, SIGN_UP, SIGN_OUT, TOGGLE_PASSWORD_VISIBILITY } from "./UserActions"
+import { GET_USER_DETAILS, SIGN_IN, SIGN_UP, SIGN_OUT, DELETE_USER, TOGGLE_PASSWORD_VISIBILITY } from "./UserActions"
 
 const initialState = {
     user: undefined,
@@ -30,6 +30,7 @@ const userReducer = (state = initialState, action) => {
                 token: action.payload.token
             };
     case SIGN_OUT:
+    case DELETE_USER:
         return {
             ...state,
             user: undefined,

@@ -1,19 +1,26 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { useLocation } from 'react-router-dom'
-import { getUserByIdFetch } from "../../core/services/userFetch";
+import { deleteLoggedUserFetch, getUserByIdFetch } from "../../core/services/userFetch";
 import {
+  deleteUserAction,
   getUserDetailsAction,
   signOutAction,
   togglePasswordVisibility,
 } from "./UserActions";
+import { useNavigate } from "react-router-dom";
 
 const UserDetailsComponent = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const { user, token } = useSelector((state) => state.userReducer);
 
   console.log("Redux Token:", token);
+
+  const goHome = () => {
+    navigate("/")
+  }
 
   const loadUserDetails = async () => {
     if (!token) {
@@ -30,6 +37,21 @@ const UserDetailsComponent = () => {
       dispatch(signOutAction());
     }
   };
+
+  const deleteUserHandler = async () => {
+    try {
+      await deleteLoggedUserFetch(token);
+      dispatch(deleteUserAction())
+    } catch (error) {
+      console.error("Error deleting user:", error.message)
+    }
+    signOutHandler()
+  }
+
+  const signOutHandler = () => {
+    dispatch(signOutAction())
+    goHome()
+  }
 
   useEffect(() => {
     if (token) {
@@ -70,7 +92,7 @@ const UserDetailsComponent = () => {
           </div>
           <div>
             <button onClick={() => {}}>Edit my profile</button>
-            <button onClick={() => {}}>Delete my account</button>
+            <button onClick={deleteUserHandler}>Delete my account</button>
           </div>
         </div>
       )}

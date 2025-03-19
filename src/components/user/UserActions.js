@@ -3,6 +3,7 @@ export const SIGN_UP = "SIGN_UP"
 export const GET_USER_DETAILS = "GET_USER_DETAILS"
 export const SIGN_OUT = "SIGN_OUT"
 export const TOGGLE_PASSWORD_VISIBILITY = "TOGGLE_PASSWORD_VISIBILITY"
+export const DELETE_USER = "DELETE_USER"
 
 export const signInAction = (payload) => {
     return {
@@ -32,6 +33,12 @@ export const getUserDetailsAction = (payload) => {
 export const signOutAction = () => {
     return {
         type: SIGN_OUT
+    }
+}
+
+export const deleteUserAction = () => {
+    return {
+        type: DELETE_USER
     }
 }
 
