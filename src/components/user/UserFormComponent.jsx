@@ -68,53 +68,64 @@ const UserFormComponent = ({ initialData, onCancel }) => {
     if (!validateFields()) return;
 
     try {
-      if (initialData) {
-        // Modo edición: enviar solo los datos modificados
         if (!token) {
-          setError("Authentication error: No token found.");
-          return;
+            setError("Authentication error: No token found.");
+            return;
         }
 
-        const updatedData = {};
+        if (initialData) {
+            // Modo edición: solo enviar los datos modificados
+            const updatedData = {};
 
-        // Solo agregar campos que han sido modificados
-        for (const key in registerInfo) {
-          if (registerInfo[key] !== initialData[key] && registerInfo[key] !== "") {
-            updatedData[key] = registerInfo[key];
-          }
-        }
+            for (const key in registerInfo) {
+                if (registerInfo[key] !== initialData[key] && registerInfo[key] !== "") {
+                    updatedData[key] = registerInfo[key];
+                }
+            }
 
-        // Si se ha seleccionado una nueva imagen, agregarla en FormData
-        if (registerInfo.profilePicture instanceof File) {
-          const formData = new FormData();
-          formData.append("profilePicture", registerInfo.profilePicture);
+            let dataToSend = updatedData;
 
-          for (const key in updatedData) {
-            formData.append(key, updatedData[key]);
-          }
+            if (registerInfo.profilePicture instanceof File) {
+                const formData = new FormData();
+                formData.append("profilePicture", registerInfo.profilePicture);
 
-          await updateUserFetch(token, formData);
+                for (const key in updatedData) {
+                    if (key !== "profilePicture") {
+                        formData.append(key, updatedData[key]);
+                    }
+                }
+
+                console.log("✅ Enviando FormData en edición:", [...formData.entries()]); // 🚀 Depuración
+                dataToSend = formData;
+            } else {
+                console.log("✅ Enviando JSON en edición:", updatedData); // 🚀 Depuración
+            }
+
+            await updateUserFetch(token, dataToSend);
+            dispatch(updateUserAction(updatedData));
+            dispatch(activateEditMode(false));
         } else {
-          await updateUserFetch(token, updatedData);
-        }
+            // Modo registro
+            const formData = new FormData();
+            for (const key in registerInfo) {
+                formData.append(key, registerInfo[key]);
+            }
 
-        dispatch(updateUserAction(updatedData));
-        dispatch(activateEditMode(false));
-      } else {
-        // Modo registro
-        const userInfo = await signUpFetch(registerInfo);
-        if (!userInfo) {
-          setError("Signup failed. Try again.");
-          return;
+            console.log("✅ Enviando FormData en registro:", [...formData.entries()]); // 🚀 Depuración
+
+            const userInfo = await signUpFetch(formData);
+            if (!userInfo) {
+                setError("Signup failed. Try again.");
+                return;
+            }
+
+            dispatch(signUpAction(userInfo));
+            navigate("/");
         }
-        dispatch(signUpAction(userInfo));
-        navigate("/");
-      }
     } catch (error) {
-      setError(error.message || "An error occurred.");
+        setError(error.message || "An error occurred.");
     }
-  };
-
+};
 
   const registerInputHandler = (name, value) => {
     setRegisterInfo({ ...registerInfo, [name]: value.trim() });
@@ -123,6 +134,11 @@ const UserFormComponent = ({ initialData, onCancel }) => {
   return (
     <div>
       {error && <div>{error}</div>}
+      {initialData && (
+        <div style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}>
+          ⚠️ If you change your profile picture, it may take a few minutes to upload.
+        </div>
+      )}
       <div>
         <span>Name (*): </span>
         <input

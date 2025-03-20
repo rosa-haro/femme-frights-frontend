@@ -124,9 +124,11 @@ export const updateUserFetch = async (token, updatedUserData) => {
 
     if (updatedUserData instanceof FormData) {
       options.body = updatedUserData;
+      console.log("🚀 Enviando FormData a la API:", [...updatedUserData.entries()]); // Depuración
     } else {
       options.headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(updatedUserData);
+      console.log("🚀 Enviando JSON a la API:", options.body); // Depuración
     }
 
     const res = await fetch(`${apiUrl}/users/myprofile`, options);
