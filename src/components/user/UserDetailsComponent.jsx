@@ -1,26 +1,35 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { useLocation } from 'react-router-dom'
-import { deleteLoggedUserFetch, getUserByIdFetch } from "../../core/services/userFetch";
+import {
+  deleteLoggedUserFetch,
+  getUserByIdFetch,
+} from "../../core/services/userFetch";
 import {
   deleteUserAction,
   getUserDetailsAction,
   signOutAction,
-  togglePasswordVisibility,
 } from "./UserActions";
 import { useNavigate } from "react-router-dom";
+import { activateEditMode } from "../../core/redux/reducers/global/GlobalActions";
+import UserFormComponent from "./UserFormComponent";
 
 const UserDetailsComponent = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { user, token } = useSelector((state) => state.userReducer);
+  const { isEditing } = useSelector((state) => state.globalReducer);
 
   console.log("Redux Token:", token);
 
   const goHome = () => {
-    navigate("/")
-  }
+    navigate("/");
+  };
+
+  const handleEditMode = () => {
+    dispatch(activateEditMode(!isEditing));
+  };
 
   const loadUserDetails = async () => {
     if (!token) {
@@ -28,7 +37,6 @@ const UserDetailsComponent = () => {
       dispatch(signOutAction());
       return;
     }
-
     try {
       const auxUser = await getUserByIdFetch(token);
       dispatch(getUserDetailsAction(auxUser));
@@ -41,23 +49,23 @@ const UserDetailsComponent = () => {
   const deleteUserHandler = async () => {
     try {
       await deleteLoggedUserFetch(token);
-      dispatch(deleteUserAction())
+      dispatch(deleteUserAction());
     } catch (error) {
-      console.error("Error deleting user:", error.message)
+      console.error("Error deleting user:", error.message);
     }
-    signOutHandler()
-  }
+    signOutHandler();
+  };
 
   const signOutHandler = () => {
-    dispatch(signOutAction())
-    goHome()
-  }
+    dispatch(signOutAction());
+    goHome();
+  };
 
   useEffect(() => {
     if (token) {
       loadUserDetails();
     }
-  }, [token]);
+  }, []);
 
   return (
     <div>
@@ -65,6 +73,8 @@ const UserDetailsComponent = () => {
         <div>
           <p>Loading...</p>
         </div>
+      ) : isEditing ? (
+        <UserFormComponent initialData={user} onCancel={handleEditMode} />
       ) : (
         <div>
           <div>
@@ -91,7 +101,7 @@ const UserDetailsComponent = () => {
             <span>{"•".repeat(8)}</span>
           </div>
           <div>
-            <button onClick={() => {}}>Edit my profile</button>
+            <button onClick={handleEditMode}>Edit my profile</button>
             <button onClick={deleteUserHandler}>Delete my account</button>
           </div>
         </div>

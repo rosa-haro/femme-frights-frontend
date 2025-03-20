@@ -27,18 +27,18 @@ export const signInFetch = async (username, password) => {
 
 export const signUpFetch = async (newUser) => {
   try {
-    const formData = new FormData();
-    for (const key in newUser) {
-      formData.append(key, newUser[key])
+    let options = { method: "POST" };
+
+    if (newUser instanceof FormData) {
+      options.body = newUser;
+    } else {
+      options.headers = { "Content-Type": "application/json" };
+      options.body = JSON.stringify(newUser);
     }
 
-    const res = await fetch(`${apiUrl}/signup`, {
-      method: "POST",
-      body: formData,
-    });
-
+    const res = await fetch(`${apiUrl}/signup`, options);
     const result = await res.json();
-    
+
     if (!res.ok) {
       throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
     }
@@ -103,6 +103,42 @@ export const deleteLoggedUserFetch = async (token) => {
     }
 
     return { message: "User deleted successfully" };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateUserFetch = async (token, updatedUserData) => {
+  if (!token) {
+    console.error("No token available in updateUserFetch.");
+    return null;
+  }
+
+  try {
+    let options = {
+      method: "PATCH",
+      headers: {
+        "auth-token": token
+      }
+    };
+
+    if (updatedUserData instanceof FormData) {
+      options.body = updatedUserData;
+      console.log("🚀 Enviando FormData a la API:", [...updatedUserData.entries()]); // Depuración
+    } else {
+      options.headers["Content-Type"] = "application/json";
+      options.body = JSON.stringify(updatedUserData);
+      console.log("🚀 Enviando JSON a la API:", options.body); // Depuración
+    }
+
+    const res = await fetch(`${apiUrl}/users/myprofile`, options);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Error: ${res.status} - ${errorText}`);
+    }
+
+    return await res.json();
   } catch (error) {
     throw error;
   }
