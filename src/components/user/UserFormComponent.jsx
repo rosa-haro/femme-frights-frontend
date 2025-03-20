@@ -68,40 +68,53 @@ const UserFormComponent = ({ initialData, onCancel }) => {
     if (!validateFields()) return;
 
     try {
-        if (initialData) {
-            if (!token) {
-                setError("Authentication error: No token found.");
-                return;
-            }
-
-            // const formData = new FormData();
-            // for (const key in registerInfo) {
-            //     if (key === "watchlist" || key === "favorites") {
-            //         if (Array.isArray(registerInfo[key])) {
-            //             const filteredArray = registerInfo[key].filter(item => item && item.trim() !== "");
-            //             formData.append(key, JSON.stringify(filteredArray));
-            //         }
-            //     } else {
-            //         formData.append(key, registerInfo[key]);
-            //     }
-            // }
-
-            const updatedUser = await updateUserFetch(token, registerInfo);
-            dispatch(updateUserAction(updatedUser));
-            dispatch(activateEditMode(false));
-        } else {
-            const userInfo = await signUpFetch(registerInfo);
-            if (!userInfo) {
-                setError("Signup failed. Try again.");
-                return;
-            }
-            dispatch(signUpAction(userInfo));
-            navigate("/");
+      if (initialData) {
+        // Modo edición: enviar solo los datos modificados
+        if (!token) {
+          setError("Authentication error: No token found.");
+          return;
         }
+
+        const updatedData = {};
+
+        // Solo agregar campos que han sido modificados
+        for (const key in registerInfo) {
+          if (registerInfo[key] !== initialData[key] && registerInfo[key] !== "") {
+            updatedData[key] = registerInfo[key];
+          }
+        }
+
+        // Si se ha seleccionado una nueva imagen, agregarla en FormData
+        if (registerInfo.profilePicture instanceof File) {
+          const formData = new FormData();
+          formData.append("profilePicture", registerInfo.profilePicture);
+
+          for (const key in updatedData) {
+            formData.append(key, updatedData[key]);
+          }
+
+          await updateUserFetch(token, formData);
+        } else {
+          await updateUserFetch(token, updatedData);
+        }
+
+        dispatch(updateUserAction(updatedData));
+        dispatch(activateEditMode(false));
+      } else {
+        // Modo registro
+        const userInfo = await signUpFetch(registerInfo);
+        if (!userInfo) {
+          setError("Signup failed. Try again.");
+          return;
+        }
+        dispatch(signUpAction(userInfo));
+        navigate("/");
+      }
     } catch (error) {
-        setError(error.message || "An error occurred.");
+      setError(error.message || "An error occurred.");
     }
-};
+  };
+
 
   const registerInputHandler = (name, value) => {
     setRegisterInfo({ ...registerInfo, [name]: value.trim() });

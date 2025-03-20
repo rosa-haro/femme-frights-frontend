@@ -115,15 +115,22 @@ export const updateUserFetch = async (token, updatedUserData) => {
   }
 
   try {
-    const res = await fetch(`${apiUrl}/users/myprofile`, {
+    let options = {
       method: "PATCH",
       headers: {
-        "auth-token": token,
-        "Content-type": "application/JSON"
-      },
-      body: JSON.stringify(updatedUserData)
-    });
-    console.log(updatedUserData)
+        "auth-token": token
+      }
+    };
+
+    if (updatedUserData instanceof FormData) {
+      options.body = updatedUserData;
+    } else {
+      options.headers["Content-Type"] = "application/json";
+      options.body = JSON.stringify(updatedUserData);
+    }
+
+    const res = await fetch(`${apiUrl}/users/myprofile`, options);
+
     if (!res.ok) {
       const errorText = await res.text();
       throw new Error(`Error: ${res.status} - ${errorText}`);
