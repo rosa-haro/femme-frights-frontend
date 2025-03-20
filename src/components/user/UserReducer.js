@@ -5,6 +5,8 @@ const initialState = {
     token: undefined,
     isLogged: false,
     isPasswordVisible: false,
+    favorites: [],
+    watchlist: [],
 };
 
 const userReducer = (state = initialState, action) => {
@@ -24,7 +26,9 @@ const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 user: action.payload.user,
-                token: action.payload.token
+                token: action.payload.token,
+                favorites: action.payload.user.favorites,
+                watchlist: action.payload.user.watchlist,
             };
         case UPDATE_USER:
             return {
@@ -38,7 +42,19 @@ const userReducer = (state = initialState, action) => {
                 user: undefined,
                 token: undefined,
                 isLogged: false,
+                favorites: [],
+                watchlist: [],
             };
+        // case TOGGLE_FAVORITE:
+        //     return {
+        //         ...state,
+        //         favorites: action.payload,
+        //     };
+        // case TOGGLE_WATCHLIST:
+        //     return {
+        //         ...state,
+        //         watchlist: action.payload
+        //     }
         case TOGGLE_PASSWORD_VISIBILITY:
             return {
                 ...state,

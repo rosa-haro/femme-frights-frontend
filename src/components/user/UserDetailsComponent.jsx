@@ -23,14 +23,6 @@ const UserDetailsComponent = () => {
 
   console.log("Redux Token:", token);
 
-  const goHome = () => {
-    navigate("/");
-  };
-
-  const handleEditMode = () => {
-    dispatch(activateEditMode(!isEditing));
-  };
-
   const loadUserDetails = async () => {
     if (!token) {
       console.error("No hay token disponible. Cerrando sesión...");
@@ -41,10 +33,25 @@ const UserDetailsComponent = () => {
       const auxUser = await getUserByIdFetch(token);
       dispatch(getUserDetailsAction(auxUser));
     } catch (error) {
-      console.error("Error obteniendo los detalles del usuario:", error);
+      console.error("Error fetching user details:", error);
       dispatch(signOutAction());
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      loadUserDetails();
+    }
+  }, []);
+
+  const goHome = () => {
+    navigate("/");
+  };
+
+  const handleEditMode = () => {
+    dispatch(activateEditMode(!isEditing));
+  };
+
 
   const deleteUserHandler = async () => {
     try {
@@ -61,11 +68,6 @@ const UserDetailsComponent = () => {
     goHome();
   };
 
-  useEffect(() => {
-    if (token) {
-      loadUserDetails();
-    }
-  }, []);
 
   return (
     <div>

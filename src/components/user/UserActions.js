@@ -5,6 +5,8 @@ export const SIGN_OUT = "SIGN_OUT"
 export const TOGGLE_PASSWORD_VISIBILITY = "TOGGLE_PASSWORD_VISIBILITY"
 export const DELETE_USER = "DELETE_USER"
 export const UPDATE_USER = "UPDATE_USER"
+// export const TOGGLE_FAVORITE = "TOGGLE_FAVORITE"
+// export const TOGGLE_WATCHLIST = "TOGGLE_WATCHLIST"
 
 
 export const signInAction = (payload) => {
@@ -50,6 +52,20 @@ export const updateUserAction = (updatedUserData) => {
         payload: updatedUserData,
     }
 }
+
+// export const toggleFavoriteAction = (favorites) => {
+//     return {
+//         type: TOGGLE_FAVORITE,
+//         payload: favorites,
+//     }
+// }
+
+// export const toggleWatchlistAction = (watchlist) => {
+//     return {
+//         type: TOGGLE_WATCHLIST,
+//         payload: watchlist,
+//     }
+// }
 
 // No puedo implementarlo en myprofile, pero sí me serviría para el login/signup y para el editar
 export const togglePasswordVisibility = () => {

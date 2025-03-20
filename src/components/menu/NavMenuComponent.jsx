@@ -10,8 +10,8 @@ const NavMenuComponent = () => {
     const { isLogged } = useSelector(state => state.userReducer);
 
     const goHome = () => navigate("/");
-    const goToFavorites = () => navigate("/favorites");
-    const goToWatchlist = () => navigate("/watchlist");
+    const goToFavorites = () => navigate(isLogged ? "/favorites" : "/signin");
+    const goToWatchlist = () => navigate(isLogged ? "/watchlist" : "/signin");
     const goToContact = () => navigate("/contact");
     const goToProfile = () => navigate(isLogged ? "/myprofile" : "/signin");
 

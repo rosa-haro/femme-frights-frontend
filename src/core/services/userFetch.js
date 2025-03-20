@@ -143,3 +143,59 @@ export const updateUserFetch = async (token, updatedUserData) => {
     throw error;
   }
 };
+
+export const toggleFavoriteFetch = async (token, idMovie) => {
+  if (!token) {
+    console.error("No token available in toggleFavoriteFetch.");
+    return null;
+  }
+
+  try {
+    const res = await fetch(`${apiUrl}/users/favorites/${idMovie}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": `${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Error: ${res.status} - ${errorText}`);
+    }
+
+    const result = await res.json();
+    return result.favorites;
+  } catch (error) {
+    console.error("Error in toggleFavoriteFetch:", error.message);
+    throw error;
+  }
+};
+
+export const toggleWatchlistFetch = async (token, idMovie) => {
+  if (!token) {
+    console.error("No token available in toggleWatchlistFetch.");
+    return null;
+  }
+
+  try {
+    const res = await fetch(`${apiUrl}/users/watchlist/${idMovie}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": `${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Error: ${res.status} - ${errorText}`);
+    }
+
+    const result = await res.json();
+    return result.watchlist; 
+  } catch (error) {
+    console.error("Error in toggleWatchlistFetch:", error.message);
+    throw error;
+  }
+};
