@@ -56,10 +56,16 @@ const MovieListComponent = () => {
 
   return (
     <div>
-      {!moviesToShow || moviesToShow.length === 0 ? (
-        <div>
-          <p>Loading...</p>
-        </div>
+       {!moviesToShow ? (
+        <p>Loading movies...</p>
+      ) : moviesToShow.length === 0 ? (
+        <p>
+          {location.pathname === "/" || !movies.length
+            ? "No movies to show"
+            : location.pathname === "/favorites"
+            ? "Your favorites list is empty."
+            : "Your watchlist is empty."}
+        </p>
       ) : (
         moviesToShow.map((m, idx) => (
           <div key={idx}>
