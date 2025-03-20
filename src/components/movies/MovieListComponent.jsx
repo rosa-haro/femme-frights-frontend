@@ -12,10 +12,9 @@ const MovieListComponent = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { movies } = useSelector((state) => state.moviesReducer);
+  const { movies, searchResults } = useSelector((state) => state.moviesReducer);
   const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie();
-
-  const { favorites = [], watchlist = [], token } = useSelector((state) => state.userReducer);
+  const { favorites, watchlist, token } = useSelector((state) => state.userReducer);
 
   const loadAllMoviesList = async () => {
     const movieListAux = await getAllMoviesFetch();
@@ -46,6 +45,7 @@ const MovieListComponent = () => {
   };
 
   const chooseMoviesToShow = () => {
+    if (searchResults.length > 0) return searchResults
     if (location.pathname === "/favorites") return favorites;
     if (location.pathname === "/watchlist") return watchlist;
     return movies;
@@ -59,7 +59,9 @@ const MovieListComponent = () => {
         <p>Loading movies...</p>
       ) : moviesToShow.length === 0 ? (
         <p>
-          {location.pathname === "/" || !movies.length
+          {searchResults.length > 0
+          ? "No movies found."
+            : location.pathname === "/" || !movies.length
             ? "No movies to show"
             : location.pathname === "/favorites"
             ? "Your favorites list is empty."

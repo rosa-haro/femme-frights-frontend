@@ -12,6 +12,7 @@ const moviesReducer = (state = initialState, action) => {
             return {
                 ...state,
                 movies: action.payload,
+                searchResults: [],
             };
         case LOAD_ONE_MOVIE:
             return {
