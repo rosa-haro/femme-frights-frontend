@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { loadAllMoviesAction } from "./MoviesActions";
 import { getAllMoviesFetch } from "../../core/services/moviesFetch";
-import { getUserByIdFetch, toggleFavoriteFetch } from "../../core/services/userFetch";
-import { getUserDetailsAction, signOutAction, toggleFavoriteAction } from "../user/UserActions";
+import { getUserByIdFetch, toggleFavoriteFetch, toggleWatchlistFetch } from "../../core/services/userFetch";
+import { getUserDetailsAction, signOutAction } from "../user/UserActions";
 
 const MovieListComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation()
+  const location = useLocation();
 
-  const { favorites, watchlist, isLogged, token } = useSelector((state) => state.userReducer)
+  const { favorites = [], watchlist = [], isLogged, token } = useSelector((state) => state.userReducer);
   const { movies } = useSelector((state) => state.moviesReducer);
 
   const loadAllMoviesList = async () => {
@@ -22,12 +22,12 @@ const MovieListComponent = () => {
   const loadUserMovieList = async () => {
     try {
       const auxUser = await getUserByIdFetch(token);
-      dispatch(getUserDetailsAction(auxUser))
+      dispatch(getUserDetailsAction(auxUser));
     } catch (error) {
       console.error("Error fetching user info:", error);
-      dispatch(signOutAction())
+      dispatch(signOutAction());
     }
-  }
+  };
 
   useEffect(() => {
     if (location.pathname === "/") {
@@ -36,38 +36,49 @@ const MovieListComponent = () => {
         loadUserMovieList();
       }
     }
-}, [location.pathname, isLogged, token]); 
-
+  }, [location.pathname, isLogged, token]);
 
   const goToDetails = (_id) => {
-    navigate("/details", {
-      state: {
-        _id,
-      },
-    });
+    navigate("/details", { state: { _id } });
   };
 
   const chooseMoviesToShow = () => {
     if (location.pathname === "/favorites") return favorites;
     if (location.pathname === "/watchlist") return watchlist;
     return movies;
-  }
+  };
 
-  const moviesToShow = chooseMoviesToShow()
+  const moviesToShow = chooseMoviesToShow();
 
-  const isFavorite = (id) => favorites.some((fav) => fav._id === id)
+  const isFavorite = (id) => favorites.some((fav) => fav._id === id);
+
+  const isInWatchlist = (id) => watchlist.some((movie) => movie._id === id);
 
   const handleToggleFavorite = async (idMovie) => {
     if (!token) {
       console.error("User not logged in");
       return;
     }
-   try {
+    try {
       await toggleFavoriteFetch(token, idMovie);
       const updatedUserData = await getUserByIdFetch(token);
       dispatch(getUserDetailsAction(updatedUserData));
     } catch (error) {
       console.error("Error toggling favorite:", error);
+    }
+  };
+
+  const handleToggleWatchlist = async (idMovie) => {
+    if (!token) {
+      console.error("User not logged in");
+      return;
+    }
+    try {
+      await toggleWatchlistFetch(token, idMovie);
+      const updatedUserData = await getUserByIdFetch(token);
+      dispatch(getUserDetailsAction(updatedUserData));
+    } catch (error) {
+      console.error("Error toggling watchlist:", error);
     }
   };
 
@@ -101,13 +112,17 @@ const MovieListComponent = () => {
             <div>
               <button onClick={() => goToDetails(m._id)}>Details</button>
 
-              { isLogged ? (
-                <><button onClick={() => handleToggleFavorite(m._id)}>
-                {isFavorite(m._id) ? "Remove from favorites" : "Add to favorites"}
-              </button>
-              <button onClick={() => {}}>Add to watchlist</button></>
-              ) : (null)}
-              
+              {isLogged ? (
+                <>
+                  <button onClick={() => handleToggleFavorite(m._id)}>
+                    {isFavorite(m._id) ? "Remove from favorites" : "Add to favorites"}
+                  </button>
+
+                  <button onClick={() => handleToggleWatchlist(m._id)}>
+                    {isInWatchlist(m._id) ? "Remove from watchlist" : "Add to watchlist"}
+                  </button>
+                </>
+              ) : null}
             </div>
           </div>
         ))

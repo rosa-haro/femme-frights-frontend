@@ -1,4 +1,4 @@
-import { GET_USER_DETAILS, SIGN_IN, SIGN_UP, SIGN_OUT, DELETE_USER, TOGGLE_PASSWORD_VISIBILITY, UPDATE_USER,TOGGLE_FAVORITE, TOGGLE_WATCHLIST } from "./UserActions";
+import { GET_USER_DETAILS, SIGN_IN, SIGN_UP, SIGN_OUT, DELETE_USER, TOGGLE_PASSWORD_VISIBILITY, UPDATE_USER } from "./UserActions";
 
 const initialState = {
     user: undefined,
@@ -45,16 +45,16 @@ const userReducer = (state = initialState, action) => {
                 favorites: [],
                 watchlist: [],
             };
-        case TOGGLE_FAVORITE:
-            return {
-                ...state,
-                favorites: action.payload,
-            };
-        case TOGGLE_WATCHLIST:
-            return {
-                ...state,
-                watchlist: action.payload
-            }
+        // case TOGGLE_FAVORITE:
+        //     return {
+        //         ...state,
+        //         favorites: action.payload,
+        //     };
+        // case TOGGLE_WATCHLIST:
+        //     return {
+        //         ...state,
+        //         watchlist: action.payload
+        //     }
         case TOGGLE_PASSWORD_VISIBILITY:
             return {
                 ...state,
