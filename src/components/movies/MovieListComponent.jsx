@@ -3,16 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { loadAllMoviesAction } from "./MoviesActions";
 import { getAllMoviesFetch } from "../../core/services/moviesFetch";
-import { getUserByIdFetch, toggleFavoriteFetch, toggleWatchlistFetch } from "../../core/services/userFetch";
+import { getUserByIdFetch } from "../../core/services/userFetch";
 import { getUserDetailsAction, signOutAction } from "../user/UserActions";
+import useToggleMovie from "../../core/hooks/useToggleMovie"; 
 
 const MovieListComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { favorites = [], watchlist = [], isLogged, token } = useSelector((state) => state.userReducer);
   const { movies } = useSelector((state) => state.moviesReducer);
+  const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie(); // ✅ Usamos el hook
+
+  const { favorites = [], watchlist = [], token } = useSelector((state) => state.userReducer);
 
   const loadAllMoviesList = async () => {
     const movieListAux = await getAllMoviesFetch();
@@ -49,38 +52,6 @@ const MovieListComponent = () => {
   };
 
   const moviesToShow = chooseMoviesToShow();
-
-  const isFavorite = (id) => favorites.some((fav) => fav._id === id);
-
-  const isInWatchlist = (id) => watchlist.some((movie) => movie._id === id);
-
-  const handleToggleFavorite = async (idMovie) => {
-    if (!token) {
-      console.error("User not logged in");
-      return;
-    }
-    try {
-      await toggleFavoriteFetch(token, idMovie);
-      const updatedUserData = await getUserByIdFetch(token);
-      dispatch(getUserDetailsAction(updatedUserData));
-    } catch (error) {
-      console.error("Error toggling favorite:", error);
-    }
-  };
-
-  const handleToggleWatchlist = async (idMovie) => {
-    if (!token) {
-      console.error("User not logged in");
-      return;
-    }
-    try {
-      await toggleWatchlistFetch(token, idMovie);
-      const updatedUserData = await getUserByIdFetch(token);
-      dispatch(getUserDetailsAction(updatedUserData));
-    } catch (error) {
-      console.error("Error toggling watchlist:", error);
-    }
-  };
 
   return (
     <div>

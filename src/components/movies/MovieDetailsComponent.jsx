@@ -3,12 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMovieById } from "../../core/services/moviesFetch";
 import { loadOneMovieAction } from "./MoviesActions";
 import { useLocation } from "react-router-dom";
-import {
-  getUserByIdFetch,
-  toggleFavoriteFetch,
-  toggleWatchlistFetch,
-} from "../../core/services/userFetch";
-import { getUserDetailsAction } from "../user/UserActions";
+import useToggleMovie from "../../core/hooks/useToggleMovie";
 
 const MovieDetailsComponent = () => {
   const location = useLocation();
@@ -18,9 +13,7 @@ const MovieDetailsComponent = () => {
   const { _id } = state;
 
   const { selectedMovie } = useSelector((state) => state.moviesReducer);
-  const { favorites, watchlist, isLogged, token } = useSelector(
-    (state) => state.userReducer
-  );
+  const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie(); // ✅ Usamos el hook
 
   useEffect(() => {
     loadSelectedMovie();
@@ -31,46 +24,10 @@ const MovieDetailsComponent = () => {
     dispatch(loadOneMovieAction(movieAux));
   };
 
-  const isFavorite = (id) => favorites.some((fav) => fav._id === id);
-  const isInWatchlist = (id) => watchlist.some((movie) => movie._id === id);
-
-  const handleToggleFavorite = async (idMovie) => {
-    if (!token) {
-      console.error("User not logged in");
-      return;
-    }
-    try {
-      await toggleFavoriteFetch(token, idMovie);
-      const updatedUserData = await getUserByIdFetch(token);
-      dispatch(getUserDetailsAction(updatedUserData));
-    } catch (error) {
-      console.error("Error toggling favorite:", error);
-    }
-  };
-
-  const handleToggleWatchlist = async (idMovie) => {
-    if (!token) {
-      console.error("User not logged in");
-      return;
-    }
-    try {
-      await toggleWatchlistFetch(token, idMovie);
-      const updatedUserData = await getUserByIdFetch(token);
-      dispatch(getUserDetailsAction(updatedUserData));
-    } catch (error) {
-      console.error("Error toggling watchlist:", error);
-    }
-  };
-
   const formatDuration = (duration) => {
-    if (
-      !duration ||
-      duration.hours === undefined ||
-      duration.minutes === undefined
-    ) {
+    if (!duration || duration.hours === undefined || duration.minutes === undefined) {
       return "Unknown duration";
     }
-
     const { hours, minutes } = duration;
     return `${hours}h ${minutes}min`;
   };
@@ -78,9 +35,7 @@ const MovieDetailsComponent = () => {
   return (
     <>
       {!selectedMovie ? (
-        <div>
-          <p>Loading...</p>
-        </div>
+        <div><p>Loading...</p></div>
       ) : (
         <div>
           <div>
@@ -104,18 +59,15 @@ const MovieDetailsComponent = () => {
           <div>
             <span>{selectedMovie.overview}</span>
           </div>
+
           {isLogged ? (
             <div>
               <button onClick={() => handleToggleFavorite(selectedMovie._id)}>
-                {isFavorite(selectedMovie._id)
-                  ? "Remove from favorites"
-                  : "Add to favorites"}
+                {isFavorite(selectedMovie._id) ? "Remove from favorites" : "Add to favorites"}
               </button>
 
               <button onClick={() => handleToggleWatchlist(selectedMovie._id)}>
-                {isInWatchlist(selectedMovie._id)
-                  ? "Remove from watchlist"
-                  : "Add to watchlist"}
+                {isInWatchlist(selectedMovie._id) ? "Remove from watchlist" : "Add to watchlist"}
               </button>
             </div>
           ) : null}
