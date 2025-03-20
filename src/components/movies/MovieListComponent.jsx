@@ -3,26 +3,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { loadAllMoviesAction } from "./MoviesActions";
 import { getAllMoviesFetch } from "../../core/services/moviesFetch";
+import { getUserByIdFetch } from "../../core/services/userFetch";
+import { getUserDetailsAction, signOutAction } from "../user/UserActions";
 
 const MovieListComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation()
 
-  const { favorites, watchlist } = useSelector((state) => state.userReducer)
+  const { favorites, watchlist, isLogged, token } = useSelector((state) => state.userReducer)
   const { movies } = useSelector((state) => state.moviesReducer);
 
-  const loadMovieList = async () => {
+  const loadAllMoviesList = async () => {
     const movieListAux = await getAllMoviesFetch();
     dispatch(loadAllMoviesAction(movieListAux));
   };
 
+  const loadUserMovieList = async () => {
+    try {
+      const auxUser = await getUserByIdFetch(token);
+      dispatch(getUserDetailsAction(auxUser))
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      dispatch(signOutAction())
+    }
+  }
+
   useEffect(() => {
     if (location.pathname === "/") {
-      
-      loadMovieList();
+        loadAllMoviesList();
+    } else if (isLogged && (location.pathname === "/favorites" || location.pathname === "/watchlist")) {
+        loadUserMovieList();
     }
-  }, [location.pathname]);
+}, [location.pathname, isLogged]); 
 
 
   const goToDetails = (_id) => {

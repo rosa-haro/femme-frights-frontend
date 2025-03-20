@@ -18,7 +18,7 @@ const UserDetailsComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, token, watchlist, favorites } = useSelector((state) => state.userReducer);
+  const { user, token } = useSelector((state) => state.userReducer);
   const { isEditing } = useSelector((state) => state.globalReducer);
 
   console.log("Redux Token:", token);
@@ -33,7 +33,7 @@ const UserDetailsComponent = () => {
       const auxUser = await getUserByIdFetch(token);
       dispatch(getUserDetailsAction(auxUser));
     } catch (error) {
-      console.error("Error obteniendo los detalles del usuario:", error);
+      console.error("Error fetching user details:", error);
       dispatch(signOutAction());
     }
   };
@@ -43,7 +43,7 @@ const UserDetailsComponent = () => {
       loadUserDetails();
     }
   }, []);
-  
+
   const goHome = () => {
     navigate("/");
   };
