@@ -37,7 +37,6 @@ const UserDetailsComponent = () => {
       dispatch(signOutAction());
       return;
     }
-
     try {
       const auxUser = await getUserByIdFetch(token);
       dispatch(getUserDetailsAction(auxUser));
