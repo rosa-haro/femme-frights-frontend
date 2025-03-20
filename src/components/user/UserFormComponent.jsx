@@ -79,47 +79,59 @@ const UserFormComponent = ({ initialData, onCancel }) => {
     if (!validateFields()) return;
 
     try {
-      if (!token) {
-        setError("Authentication error: No token found.");
-        return;
-      }
+        if (initialData) {
+            // Edit mode
+            if (!token) {
+                setError("Authentication error: No token found.");
+                return;
+            }
 
-      if (initialData) {
-        // Edit mode
-        const updatedData = Object.keys(formUserInfo).reduce((acc, key) => {
-          if (formUserInfo[key] !== initialData[key] && formUserInfo[key] !== "") {
-            acc[key] = formUserInfo[key];
-          }
-          return acc;
-        }, {});
+            const updatedData = Object.keys(formUserInfo).reduce((acc, key) => {
+                if (formUserInfo[key] !== initialData[key] && formUserInfo[key] !== "") {
+                    acc[key] = formUserInfo[key];
+                }
+                return acc;
+            }, {});
 
-        const dataToSend = formUserInfo.profilePicture instanceof File
-          ? prepareFormData(updatedData)
-          : updatedData;
+            const dataToSend = formUserInfo.profilePicture instanceof File
+                ? prepareFormData(updatedData)
+                : updatedData;
 
-        await updateUserFetch(token, dataToSend);
-        dispatch(updateUserAction(updatedData));
-        dispatch(activateEditMode(false));
-      } else {
-        // Registration mode
-        const formData = new FormData();
-        Object.entries(formUserInfo).forEach(([key, value]) => formData.append(key, value));
+            await updateUserFetch(token, dataToSend);
+            dispatch(updateUserAction(updatedData));
+            dispatch(activateEditMode(false));
+        } else {
+            // Registration mode: Send JSON if no profile picture is uploaded
+            let dataToSend = { ...formUserInfo };
 
-        console.log("✅ Sending FormData for registration:", [...formData.entries()]);
+            if (formUserInfo.profilePicture instanceof File) {
+                const formData = new FormData();
+                Object.entries(formUserInfo).forEach(([key, value]) => {
+                    if (value !== undefined && value !== null) {
+                        formData.append(key, value);
+                    }
+                });
 
-        const userInfo = await signUpFetch(formData);
-        if (!userInfo) {
-          setError("Signup failed. Try again.");
-          return;
+                console.log("✅ Sending FormData for registration:", [...formData.entries()]);
+                dataToSend = formData;
+            } else {
+                console.log("✅ Sending JSON for registration:", dataToSend);
+            }
+
+            const userInfo = await signUpFetch(dataToSend);
+            if (!userInfo) {
+                setError("Signup failed. Try again.");
+                return;
+            }
+
+            dispatch(signUpAction(userInfo));
+            goHome();
         }
-
-        dispatch(signUpAction(userInfo));
-        goHome();
-      }
     } catch (error) {
-      setError(error.message || "An error occurred.");
+        setError(error.message || "An error occurred.");
     }
-  };
+};
+
 
   return (
     <div>

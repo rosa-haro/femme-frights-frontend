@@ -27,18 +27,18 @@ export const signInFetch = async (username, password) => {
 
 export const signUpFetch = async (newUser) => {
   try {
-    const formData = new FormData();
-    for (const key in newUser) {
-      formData.append(key, newUser[key])
+    let options = { method: "POST" };
+
+    if (newUser instanceof FormData) {
+      options.body = newUser;
+    } else {
+      options.headers = { "Content-Type": "application/json" };
+      options.body = JSON.stringify(newUser);
     }
 
-    const res = await fetch(`${apiUrl}/signup`, {
-      method: "POST",
-      body: formData,
-    });
-
+    const res = await fetch(`${apiUrl}/signup`, options);
     const result = await res.json();
-    
+
     if (!res.ok) {
       throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
     }
