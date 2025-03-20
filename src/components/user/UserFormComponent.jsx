@@ -9,7 +9,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { token } = useSelector((state) => state.userReducer)
+  const { token } = useSelector((state) => state.userReducer);
   // Precargar datos si initialData existe (modo edición)
   const [registerInfo, setRegisterInfo] = useState(initialData || {});
   const [error, setError] = useState("");
@@ -21,7 +21,10 @@ const UserFormComponent = ({ initialData, onCancel }) => {
   }, [initialData]);
 
   const handleProfilePicture = (e) => {
-    setRegisterInfo({ ...registerInfo, profilePicture: e.target.files[0] });
+    const file = e.target.files[0];
+    if (file) {
+      setRegisterInfo({ ...registerInfo, profilePicture: file });
+    }
   };
 
   const validateEmail = (email) => {
@@ -65,29 +68,40 @@ const UserFormComponent = ({ initialData, onCancel }) => {
     if (!validateFields()) return;
 
     try {
-      if (initialData) {
-        // Modo edición (Actualizar usuario)
-        if (!token) {
-          setError("Authentication error: No token found.");
-          return;
+        if (initialData) {
+            if (!token) {
+                setError("Authentication error: No token found.");
+                return;
+            }
+
+            // const formData = new FormData();
+            // for (const key in registerInfo) {
+            //     if (key === "watchlist" || key === "favorites") {
+            //         if (Array.isArray(registerInfo[key])) {
+            //             const filteredArray = registerInfo[key].filter(item => item && item.trim() !== "");
+            //             formData.append(key, JSON.stringify(filteredArray));
+            //         }
+            //     } else {
+            //         formData.append(key, registerInfo[key]);
+            //     }
+            // }
+
+            const updatedUser = await updateUserFetch(token, registerInfo);
+            dispatch(updateUserAction(updatedUser));
+            dispatch(activateEditMode(false));
+        } else {
+            const userInfo = await signUpFetch(registerInfo);
+            if (!userInfo) {
+                setError("Signup failed. Try again.");
+                return;
+            }
+            dispatch(signUpAction(userInfo));
+            navigate("/");
         }
-        const updatedUser = await updateUserFetch(token, registerInfo); // 🔹 Ahora usamos el token correcto
-        dispatch(updateUserAction(updatedUser));
-        dispatch(activateEditMode(false)); // Salir del modo edición
-      } else {
-        // Modo registro (Nuevo usuario)
-        const userInfo = await signUpFetch(registerInfo);
-        if (!userInfo) {
-          setError("Signup failed. Try again.");
-          return;
-        }
-        dispatch(signUpAction(userInfo));
-        navigate("/");
-      }
     } catch (error) {
-      setError(error.message || "An error occurred.");
+        setError(error.message || "An error occurred.");
     }
-  };
+};
 
   const registerInputHandler = (name, value) => {
     setRegisterInfo({ ...registerInfo, [name]: value.trim() });

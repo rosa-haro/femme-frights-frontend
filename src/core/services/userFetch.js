@@ -118,12 +118,12 @@ export const updateUserFetch = async (token, updatedUserData) => {
     const res = await fetch(`${apiUrl}/users/myprofile`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json",
         "auth-token": token,
+        "Content-type": "application/JSON"
       },
-      body: JSON.stringify(updatedUserData),
+      body: JSON.stringify(updatedUserData)
     });
-
+    console.log(updatedUserData)
     if (!res.ok) {
       const errorText = await res.text();
       throw new Error(`Error: ${res.status} - ${errorText}`);
