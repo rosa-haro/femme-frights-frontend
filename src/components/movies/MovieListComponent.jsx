@@ -13,7 +13,7 @@ const MovieListComponent = () => {
   const location = useLocation();
 
   const { movies } = useSelector((state) => state.moviesReducer);
-  const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie(); // ✅ Usamos el hook
+  const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie();
 
   const { favorites = [], watchlist = [], token } = useSelector((state) => state.userReducer);
 

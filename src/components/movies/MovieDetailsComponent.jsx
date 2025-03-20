@@ -13,7 +13,7 @@ const MovieDetailsComponent = () => {
   const { _id } = state;
 
   const { selectedMovie } = useSelector((state) => state.moviesReducer);
-  const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie(); // ✅ Usamos el hook
+  const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie(); 
 
   useEffect(() => {
     loadSelectedMovie();
