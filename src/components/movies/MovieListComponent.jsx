@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { loadAllMoviesAction } from "./MoviesActions";
 import { getAllMoviesFetch } from "../../core/services/moviesFetch";
-import { getUserByIdFetch } from "../../core/services/userFetch";
-import { getUserDetailsAction, signOutAction } from "../user/UserActions";
+import { getUserByIdFetch, toggleFavoriteFetch } from "../../core/services/userFetch";
+import { getUserDetailsAction, signOutAction, toggleFavoriteAction } from "../user/UserActions";
 
 const MovieListComponent = () => {
   const navigate = useNavigate();
@@ -31,11 +31,12 @@ const MovieListComponent = () => {
 
   useEffect(() => {
     if (location.pathname === "/") {
-        loadAllMoviesList();
-    } else if (isLogged && (location.pathname === "/favorites" || location.pathname === "/watchlist")) {
+      loadAllMoviesList();
+      if (isLogged && token) {
         loadUserMovieList();
+      }
     }
-}, [location.pathname, isLogged]); 
+}, [location.pathname, isLogged, token]); 
 
 
   const goToDetails = (_id) => {
@@ -54,9 +55,25 @@ const MovieListComponent = () => {
 
   const moviesToShow = chooseMoviesToShow()
 
+  const isFavorite = (id) => favorites.some((fav) => fav._id === id)
+
+  const handleToggleFavorite = async (idMovie) => {
+    if (!token) {
+      console.error("User not logged in");
+      return;
+    }
+   try {
+      await toggleFavoriteFetch(token, idMovie);
+      const updatedUserData = await getUserByIdFetch(token);
+      dispatch(getUserDetailsAction(updatedUserData));
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
+  };
+
   return (
     <div>
-       {!moviesToShow ? (
+      {!moviesToShow ? (
         <p>Loading movies...</p>
       ) : moviesToShow.length === 0 ? (
         <p>
@@ -71,20 +88,26 @@ const MovieListComponent = () => {
           <div key={idx}>
             <div>
               <span>{m.titleEnglish}</span>
-              {m.titleEnglish !== m.titleOriginal ? (
-                <span> ({m.titleOriginal})</span>
-              ) : null}
+              {m.titleEnglish !== m.titleOriginal ? <span> ({m.titleOriginal})</span> : null}
             </div>
             <div>
-            <span>Year: </span>
+              <span>Year: </span>
               <span>{m.year}</span>
             </div>
             <div>
-                <span>Director: </span>
+              <span>Director: </span>
               <span>{m.director}</span>
             </div>
             <div>
-            <button onClick={() => goToDetails(m._id)}>Details</button>
+              <button onClick={() => goToDetails(m._id)}>Details</button>
+
+              { isLogged ? (
+                <><button onClick={() => handleToggleFavorite(m._id)}>
+                {isFavorite(m._id) ? "Remove from favorites" : "Add to favorites"}
+              </button>
+              <button onClick={() => {}}>Add to watchlist</button></>
+              ) : (null)}
+              
             </div>
           </div>
         ))
