@@ -1,23 +1,29 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { loadAllMoviesAction } from "./MoviesActions";
 import { getAllMoviesFetch } from "../../core/services/moviesFetch";
 
 const MovieListComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation()
 
+  const { favorites, watchlist } = useSelector((state) => state.userReducer)
   const { movies } = useSelector((state) => state.moviesReducer);
-
-  useEffect(() => {
-    loadMovieList();
-  }, []);
 
   const loadMovieList = async () => {
     const movieListAux = await getAllMoviesFetch();
     dispatch(loadAllMoviesAction(movieListAux));
   };
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      
+      loadMovieList();
+    }
+  }, [location.pathname]);
+
 
   const goToDetails = (_id) => {
     navigate("/details", {
@@ -27,14 +33,22 @@ const MovieListComponent = () => {
     });
   };
 
+  const chooseMoviesToShow = () => {
+    if (location.pathname === "/favorites") return favorites;
+    if (location.pathname === "/watchlist") return watchlist;
+    return movies;
+  }
+
+  const moviesToShow = chooseMoviesToShow()
+
   return (
     <div>
-      {!movies || movies.length === 0 ? (
+      {!moviesToShow || moviesToShow.length === 0 ? (
         <div>
           <p>Loading...</p>
         </div>
       ) : (
-        movies.map((m, idx) => (
+        moviesToShow.map((m, idx) => (
           <div key={idx}>
             <div>
               <span>{m.titleEnglish}</span>

@@ -18,18 +18,10 @@ const UserDetailsComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, token } = useSelector((state) => state.userReducer);
+  const { user, token, watchlist, favorites } = useSelector((state) => state.userReducer);
   const { isEditing } = useSelector((state) => state.globalReducer);
 
   console.log("Redux Token:", token);
-
-  const goHome = () => {
-    navigate("/");
-  };
-
-  const handleEditMode = () => {
-    dispatch(activateEditMode(!isEditing));
-  };
 
   const loadUserDetails = async () => {
     if (!token) {
@@ -46,6 +38,21 @@ const UserDetailsComponent = () => {
     }
   };
 
+  useEffect(() => {
+    if (token) {
+      loadUserDetails();
+    }
+  }, []);
+  
+  const goHome = () => {
+    navigate("/");
+  };
+
+  const handleEditMode = () => {
+    dispatch(activateEditMode(!isEditing));
+  };
+
+
   const deleteUserHandler = async () => {
     try {
       await deleteLoggedUserFetch(token);
@@ -61,11 +68,6 @@ const UserDetailsComponent = () => {
     goHome();
   };
 
-  useEffect(() => {
-    if (token) {
-      loadUserDetails();
-    }
-  }, []);
 
   return (
     <div>
