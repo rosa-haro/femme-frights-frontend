@@ -28,7 +28,7 @@ const UserDetailsComponent = () => {
   };
 
   const handleEditMode = () => {
-    dispatch(activateEditMode(true));
+    dispatch(activateEditMode(!isEditing));
   };
 
   const loadUserDetails = async () => {
