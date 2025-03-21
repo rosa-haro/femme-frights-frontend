@@ -1,6 +1,7 @@
 export const LOAD_ALL_MOVIES = "LOAD_ALL_MOVIES"
 export const LOAD_ONE_MOVIE = "LOAD_ONE_MOVIE"
 export const SEARCH_MOVIES = "SEARCH_MOVIES"
+export const SORT_MOVIES = "SORT_MOVIES"
 export const RESET_BROWSER = "RESET_BROWSER"
 
 export const loadAllMoviesAction = (movies) => {
@@ -20,6 +21,13 @@ export const loadOneMovieAction = (id) => {
 export const searchMoviesAction = (movies) => {
     return {
         type: SEARCH_MOVIES,
+        payload: movies
+    }
+}
+
+export const sortMoviesAction = (movies) => {
+    return {
+        type: SORT_MOVIES,
         payload: movies
     }
 }

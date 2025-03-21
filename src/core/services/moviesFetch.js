@@ -67,4 +67,38 @@ export const searchMoviesFetch = async (title) => {
   } catch (error) {
     throw error;
   }
+}
+
+  export const sortMoviesAZFetch = async () => {
+    try {
+      const res = await fetch(`${apiUrlMovies}/sort/alphabetical`);
+      const result = await res.json()
+      if (!res.ok) throw new Error(result.message)
+      return result
+    } catch (error) {
+      throw error
+    }
+  
 };
+
+export const sortMoviesByYearAscFetch = async () => {
+  try {
+    const res = await fetch(`${apiUrlMovies}/sort/year-asc`)
+    const result = await res.json()
+    if (!res.ok) throw new Error(result.message)
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
+export const sortMoviesByYearDescFetch = async () => {
+  try {
+    const res = await fetch(`${apiUrlMovies}/sort/year-desc`)
+    const result = await res.json()
+    if (!res.ok) throw new Error(result.message)
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
