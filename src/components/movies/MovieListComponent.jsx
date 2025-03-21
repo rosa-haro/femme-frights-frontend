@@ -1,4 +1,3 @@
-// ✅ MovieListComponent.jsx
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,14 +7,14 @@ import { getUserByIdFetch } from "../../core/services/userFetch";
 import { getUserDetailsAction, signOutAction } from "../user/UserActions";
 import useToggleMovie from "../../core/hooks/useToggleMovie";
 
-const MovieListComponent = () => {
+const MovieListComponent = ({ currentPage, setCurrentPage }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
 
   const { searchResults, hasSearched, activeList } = useSelector((state) => state.moviesReducer);
   const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie();
-  const { favorites, watchlist, token } = useSelector((state) => state.userReducer);
+  const { token } = useSelector((state) => state.userReducer);
 
   const loadAllMoviesList = async () => {
     const movieListAux = await getAllMoviesFetch();
@@ -42,6 +41,14 @@ const MovieListComponent = () => {
     }
   }, [location.pathname, isLogged, token]);
 
+  useEffect(() => {
+    // Solo resetear si ya no estamos en una página válida
+    const totalPages = Math.ceil(searchResults.length / 6);
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+    }
+  }, [searchResults, currentPage, setCurrentPage]);
+
   const goToDetails = (_id) => {
     navigate("/details", { state: { _id } });
   };
@@ -49,11 +56,16 @@ const MovieListComponent = () => {
   const moviesToShow = hasSearched ? searchResults : activeList;
   const isSearching = hasSearched && searchResults.length === 0;
 
+  const moviesPerPage = 6;
+  const indexOfLast = currentPage * moviesPerPage;
+  const indexOfFirst = indexOfLast - moviesPerPage;
+  const paginatedMovies = moviesToShow.slice(indexOfFirst, indexOfLast);
+
   return (
     <div>
       {!moviesToShow ? (
         <p>Loading movies...</p>
-      ) : moviesToShow.length === 0 ? (
+      ) : paginatedMovies.length === 0 ? (
         <p>
           {isSearching
             ? "No search results."
@@ -64,7 +76,7 @@ const MovieListComponent = () => {
             : "Your watchlist is empty."}
         </p>
       ) : (
-        moviesToShow.map((m, idx) => (
+        paginatedMovies.map((m, idx) => (
           <div key={idx}>
             <div>
               <span>{m.titleEnglish}</span>
