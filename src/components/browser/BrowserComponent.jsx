@@ -1,3 +1,4 @@
+// ✅ BrowserComponent.jsx - Estable con activeList, búsqueda y sort combinables
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,7 +10,8 @@ import {
 import {
   resetBrowserAction,
   searchMoviesAction,
-  sortMoviesAction
+  sortMoviesAction,
+  setActiveListAction
 } from '../movies/MoviesActions';
 import { useLocation } from 'react-router-dom';
 
@@ -19,98 +21,89 @@ const BrowserComponent = () => {
   const location = useLocation();
 
   const { favorites, watchlist } = useSelector((state) => state.userReducer);
+  const { activeList, hasSearched, searchResults } = useSelector((state) => state.moviesReducer);
 
+  // Establecer la lista activa según la ruta
   useEffect(() => {
     dispatch(resetBrowserAction());
     setQuery("");
-  }, [location.pathname]);
+
+    if (location.pathname === "/favorites") {
+        dispatch(setActiveListAction(favorites));
+      } else if (location.pathname === "/watchlist") {
+        dispatch(setActiveListAction(watchlist));
+      }
+  }, [location.pathname, dispatch, favorites, watchlist]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!query.trim()) return;
-
+  
     const searchTerm = query.toLowerCase();
-
-    if (location.pathname === "/favorites") {
-      const results = favorites.filter(movie =>
+    const listToSearch = [...activeList];
+  
+    if (listToSearch.length > 0) {
+      const filtered = listToSearch.filter(movie =>
         movie.titleEnglish.toLowerCase().includes(searchTerm)
       );
-      dispatch(searchMoviesAction(results));
+      dispatch(searchMoviesAction(filtered));
       return;
     }
-
-    if (location.pathname === "/watchlist") {
-      const results = watchlist.filter(movie =>
-        movie.titleEnglish.toLowerCase().includes(searchTerm)
-      );
-      dispatch(searchMoviesAction(results));
-      return;
-    }
-
+  
+    // Buscar desde API si no hay lista activa (Home sin datos todavía)
     try {
       const results = await searchMoviesFetch(query);
       dispatch(searchMoviesAction(results));
     } catch (error) {
-      console.error("Error fetching search results:", error);
+      console.error("Error searching:", error);
     }
   };
 
+  // Ordenar sobre la lista activa
   const handleSort = async (type) => {
-    let sorted;
-
     const getSorter = (key, asc = true) => (a, b) =>
       asc ? a[key] > b[key] ? 1 : -1 : a[key] < b[key] ? 1 : -1;
-
-    const currentList =
-      location.pathname === "/favorites"
-        ? favorites
-        : location.pathname === "/watchlist"
-        ? watchlist
-        : null;
-
-    if (currentList) {
-      if (type === "alpha") {
-        sorted = [...currentList].sort(getSorter("titleEnglish"));
-      } else if (type === "yearAsc") {
-        sorted = [...currentList].sort(getSorter("year", true));
-      } else if (type === "yearDesc") {
-        sorted = [...currentList].sort(getSorter("year", false));
-      }
+  
+    const listToSort = hasSearched ? [...searchResults] : [...activeList];
+  
+    if (listToSort.length > 0) {
+      let sorted;
+      if (type === "AZ") sorted = listToSort.sort(getSorter("titleEnglish"));
+      else if (type === "yearAsc") sorted = listToSort.sort(getSorter("year", true));
+      else if (type === "yearDesc") sorted = listToSort.sort(getSorter("year", false));
       dispatch(sortMoviesAction(sorted));
       return;
     }
-
+  
+    // Si no hay lista en memoria, usamos la API
     try {
-      if (type === "alpha") {
-        sorted = await sortMoviesAZFetch();
-      } else if (type === "yearAsc") {
-        sorted = await sortMoviesByYearAscFetch();
-      } else if (type === "yearDesc") {
-        sorted = await sortMoviesByYearDescFetch();
-      }
-      dispatch(sortMoviesAction(sorted));
+      let result;
+      if (type === "AZ") result = await sortMoviesAZFetch();
+      else if (type === "yearAsc") result = await sortMoviesByYearAscFetch();
+      else if (type === "yearDesc") result = await sortMoviesByYearDescFetch();
+      dispatch(sortMoviesAction(result));
     } catch (error) {
-      console.error("Error sorting movies:", error);
+      console.error("Error sorting:", error);
     }
   };
 
   return (
     <div>
+      <div style={{ marginTop: "1rem" }}>
+        <button onClick={() => handleSort("AZ")}>Sort A-Z</button>
+        <button onClick={() => handleSort("yearAsc")}>Sort by year (oldest first)</button>
+        <button onClick={() => handleSort("yearDesc")}>Sort by year (newest first)</button>
+      </div>
+
       <form onSubmit={handleSearch}>
         <input
           type="text"
-          placeholder="Search by title..."
+          placeholder='Search by title...'
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <button type="submit">Search</button>
       </form>
-
-      <div style={{ marginTop: "1rem" }}>
-        <button onClick={() => handleSort("alpha")}>Sort A-Z</button>
-        <button onClick={() => handleSort("yearAsc")}>Sort by year (oldest first)</button>
-        <button onClick={() => handleSort("yearDesc")}>Sort by Year (newest first)</button>
-      </div>
     </div>
   );
 };

@@ -1,28 +1,28 @@
+// ✅ MovieListComponent.jsx
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loadAllMoviesAction } from "./MoviesActions";
+import { loadAllMoviesAction, setActiveListAction } from "./MoviesActions";
 import { getAllMoviesFetch } from "../../core/services/moviesFetch";
 import { getUserByIdFetch } from "../../core/services/userFetch";
 import { getUserDetailsAction, signOutAction } from "../user/UserActions";
-import useToggleMovie from "../../core/hooks/useToggleMovie"; 
+import useToggleMovie from "../../core/hooks/useToggleMovie";
 
 const MovieListComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { movies, searchResults, hasSearched } = useSelector((state) => state.moviesReducer);
+  const { searchResults, hasSearched, activeList } = useSelector((state) => state.moviesReducer);
   const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie();
   const { favorites, watchlist, token } = useSelector((state) => state.userReducer);
 
-  // Load general movie list
   const loadAllMoviesList = async () => {
     const movieListAux = await getAllMoviesFetch();
     dispatch(loadAllMoviesAction(movieListAux));
+    dispatch(setActiveListAction(movieListAux));
   };
 
-  // Load using details to get favlist and watchlist
   const loadUserMovieList = async () => {
     try {
       const auxUser = await getUserByIdFetch(token);
@@ -33,7 +33,6 @@ const MovieListComponent = () => {
     }
   };
 
-  // Loading general list + if the user is logged, it loads favlist + watchlist to get the buttons and data right
   useEffect(() => {
     if (location.pathname === "/") {
       loadAllMoviesList();
@@ -47,19 +46,8 @@ const MovieListComponent = () => {
     navigate("/details", { state: { _id } });
   };
 
-  // Choosing which movie list to show depending on pathname + if a search has been made
-  const chooseMoviesToShow = () => {
-    // Handling no search results by returning searchResults even when it equals 0
-    if (hasSearched) return searchResults
-    if (location.pathname === "/favorites") return favorites;
-    if (location.pathname === "/watchlist") return watchlist;
-    return movies;
-  };
-
-  const moviesToShow = chooseMoviesToShow();
-
-  // Handling no search results
-  const isSearching = hasSearched && searchResults.length === 0
+  const moviesToShow = hasSearched ? searchResults : activeList;
+  const isSearching = hasSearched && searchResults.length === 0;
 
   return (
     <div>

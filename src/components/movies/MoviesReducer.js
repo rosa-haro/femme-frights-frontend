@@ -1,42 +1,77 @@
-import { LOAD_ALL_MOVIES, LOAD_ONE_MOVIE, SEARCH_MOVIES, SORT_MOVIES, RESET_BROWSER } from "./MoviesActions";
-
-const initialState = {
+// ✅ MoviesReducer.js
+import {
+    LOAD_ALL_MOVIES,
+    LOAD_ONE_MOVIE,
+    SEARCH_MOVIES,
+    SORT_MOVIES,
+    RESET_BROWSER,
+    SET_ACTIVE_LIST
+  } from "./MoviesActions";
+  
+  const initialState = {
     movies: [],
     selectedMovie: undefined,
-    searchResults: [],
-    hasSearched: false, // Otherwise it shows "No search results" unless you write something on the search bar
-};
-
-const moviesReducer = (state = initialState, action) => {
+    activeList: [],        // Lista base sobre la que se opera
+    searchResults: [],     // Resultado visible (búsqueda o sort)
+    hasSearched: false,
+    hasSorted: false
+  };
+  
+  const moviesReducer = (state = initialState, action) => {
     switch (action.type) {
-        case LOAD_ALL_MOVIES:
-            return {
-                ...state,
-                movies: action.payload,
-                searchResults: [],
-                hasSearched: false
-            };
-        case LOAD_ONE_MOVIE:
-            return {
-                ...state,
-                selectedMovie: action.payload
-            }
-        case SEARCH_MOVIES:
-        case SORT_MOVIES:
-            return {
-                ...state,
-                searchResults: action.payload,
-                hasSearched: true,
-            };
-        case RESET_BROWSER:
-            return {
-                ...state,
-                searchResults: [],
-                hasSearched: false
-            }
-        default:
-            return state;
+      case LOAD_ALL_MOVIES:
+        return {
+          ...state,
+          movies: action.payload,
+          activeList: action.payload,
+          searchResults: action.payload,
+          hasSearched: false,
+          hasSorted: false,
+        };
+  
+      case LOAD_ONE_MOVIE:
+        return {
+          ...state,
+          selectedMovie: action.payload
+        };
+  
+      case SET_ACTIVE_LIST:
+        return {
+          ...state,
+          activeList: action.payload,
+          searchResults: action.payload,
+          hasSearched: false,
+          hasSorted: false,
+        };
+  
+      case SEARCH_MOVIES:
+        return {
+          ...state,
+          searchResults: action.payload,
+          hasSearched: true,
+          hasSorted: false,
+        };
+  
+      case SORT_MOVIES:
+        return {
+          ...state,
+          searchResults: action.payload,
+          hasSorted: true,
+          hasSearched: true
+        };
+  
+      case RESET_BROWSER:
+        return {
+          ...state,
+          searchResults: [],
+          hasSearched: false,
+          hasSorted: false
+        };
+  
+      default:
+        return state;
     }
-};
-
-export default moviesReducer
+  };
+  
+  export default moviesReducer;
+  
