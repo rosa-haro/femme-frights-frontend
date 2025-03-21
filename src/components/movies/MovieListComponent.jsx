@@ -12,15 +12,17 @@ const MovieListComponent = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { movies, searchResults } = useSelector((state) => state.moviesReducer);
+  const { movies, searchResults, hasSearched } = useSelector((state) => state.moviesReducer);
   const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie();
   const { favorites, watchlist, token } = useSelector((state) => state.userReducer);
 
+  // Load general movie list
   const loadAllMoviesList = async () => {
     const movieListAux = await getAllMoviesFetch();
     dispatch(loadAllMoviesAction(movieListAux));
   };
 
+  // Load using details to get favlist and watchlist
   const loadUserMovieList = async () => {
     try {
       const auxUser = await getUserByIdFetch(token);
@@ -31,6 +33,7 @@ const MovieListComponent = () => {
     }
   };
 
+  // Loading general list + if the user is logged, it loads favlist + watchlist to get the buttons and data right
   useEffect(() => {
     if (location.pathname === "/") {
       loadAllMoviesList();
@@ -44,8 +47,10 @@ const MovieListComponent = () => {
     navigate("/details", { state: { _id } });
   };
 
+  // Choosing which movie list to show depending on pathname + if a search has been made
   const chooseMoviesToShow = () => {
-    if (searchResults.length > 0) return searchResults
+    // Handling no search results by returning searchResults even when it equals 0
+    if (hasSearched) return searchResults
     if (location.pathname === "/favorites") return favorites;
     if (location.pathname === "/watchlist") return watchlist;
     return movies;
@@ -53,15 +58,18 @@ const MovieListComponent = () => {
 
   const moviesToShow = chooseMoviesToShow();
 
+  // Handling no search results
+  const isSearching = hasSearched && searchResults.length === 0
+
   return (
     <div>
       {!moviesToShow ? (
         <p>Loading movies...</p>
       ) : moviesToShow.length === 0 ? (
         <p>
-          {searchResults.length > 0
-          ? "No movies found."
-            : location.pathname === "/" || !movies.length
+          {isSearching
+            ? "No search results."
+            : location.pathname === "/"
             ? "No movies to show"
             : location.pathname === "/favorites"
             ? "Your favorites list is empty."
