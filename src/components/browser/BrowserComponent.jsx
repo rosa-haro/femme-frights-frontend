@@ -89,11 +89,20 @@ const BrowserComponent = () => {
 
   return (
     <div>
-      <div style={{ marginTop: "1rem" }}>
-        <button onClick={() => handleSort("AZ")}>Sort A-Z</button>
-        <button onClick={() => handleSort("yearAsc")}>Sort by year (oldest first)</button>
-        <button onClick={() => handleSort("yearDesc")}>Sort by year (newest first)</button>
-      </div>
+     <div style={{ marginTop: "1rem" }}>
+  <select onChange={(e) => handleSort(e.target.value)} defaultValue="">
+    <option value="" disabled>Sort by</option>
+    <option value="AZ">Title A-Z</option>
+    <option value="yearAsc">Year (Oldest First)</option>
+    <option value="yearDesc">Year (Newest First)</option>
+  </select>
+  <button onClick={() => {
+    dispatch(resetBrowserAction());
+    setQuery("");
+  }}>
+    Reset Filters
+  </button>
+</div>
 
       <form onSubmit={handleSearch}>
         <input
