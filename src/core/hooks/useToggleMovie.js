@@ -1,43 +1,56 @@
+// useToggleMovie.js ✅ Cleaned (names preserved)
+
 import { useDispatch, useSelector } from "react-redux";
-import { getUserByIdFetch, toggleFavoriteFetch, toggleWatchlistFetch } from "../services/userFetch";
+import {
+  getUserByIdFetch,
+  toggleFavoriteFetch,
+  toggleWatchlistFetch
+} from "../services/userFetch";
 import { getUserDetailsAction } from "../../components/user/UserActions";
 
 const useToggleMovie = () => {
-    const dispatch = useDispatch();
-    const { favorites, watchlist, isLogged, token } = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
+  const { favorites, watchlist, isLogged, token } = useSelector((state) => state.userReducer);
 
-    const isFavorite = (id) => favorites.some((fav) => fav._id === id);
-    const isInWatchlist = (id) => watchlist.some((movie) => movie._id === id);
+  // Check if a movie is already marked as favorite
+  const isFavorite = (id) => favorites.some((fav) => fav._id === id);
 
-    const handleToggleFavorite = async (idMovie) => {
-        if (!token) {
-            console.error("User not logged in");
-            return;
-        }
-        try {
-            await toggleFavoriteFetch(token, idMovie);
-            const updatedUserData = await getUserByIdFetch(token);
-            dispatch(getUserDetailsAction(updatedUserData));
-        } catch (error) {
-            console.error("Error toggling favorite:", error);
-        }
-    };
+  // Check if a movie is in the user's watchlist
+  const isInWatchlist = (id) => watchlist.some((movie) => movie._id === id);
 
-    const handleToggleWatchlist = async (idMovie) => {
-        if (!token) {
-            console.error("User not logged in");
-            return;
-        }
-        try {
-            await toggleWatchlistFetch(token, idMovie);
-            const updatedUserData = await getUserByIdFetch(token);
-            dispatch(getUserDetailsAction(updatedUserData));
-        } catch (error) {
-            console.error("Error toggling watchlist:", error);
-        }
-    };
+  // Toggle favorite status
+  const handleToggleFavorite = async (idMovie) => {
+    if (!token) return;
 
-    return { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged };
+    try {
+      await toggleFavoriteFetch(token, idMovie);
+      const updatedUserData = await getUserByIdFetch(token);
+      dispatch(getUserDetailsAction(updatedUserData));
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  // Toggle watchlist status
+  const handleToggleWatchlist = async (idMovie) => {
+    if (!token) return;
+
+    try {
+      await toggleWatchlistFetch(token, idMovie);
+      const updatedUserData = await getUserByIdFetch(token);
+      dispatch(getUserDetailsAction(updatedUserData));
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return {
+    isFavorite,
+    isInWatchlist,
+    handleToggleFavorite,
+    handleToggleWatchlist,
+    isLogged
+  };
 };
 
 export default useToggleMovie;
