@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { signUpFetch, updateUserFetch } from "../../core/services/userFetch";
-import { signUpAction, updateUserAction } from "./UserActions";
+import {
+  signUpFetch,
+  updateUserFetch,
+} from "../../core/services/userFetch";
+import {
+  signUpAction,
+  updateUserAction,
+} from "./UserActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { activateEditMode } from "../../core/redux/reducers/global/GlobalActions";
+import { ClipLoader } from "react-spinners";
 
 const UserFormComponent = ({ initialData, onCancel }) => {
   const dispatch = useDispatch();
@@ -12,13 +19,17 @@ const UserFormComponent = ({ initialData, onCancel }) => {
 
   const [formUserInfo, setFormUserInfo] = useState(initialData || {});
   const [error, setError] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     if (initialData) setFormUserInfo(initialData);
   }, [initialData]);
 
   const handleInputChange = (e) => {
-    setFormUserInfo({ ...formUserInfo, [e.target.name]: e.target.value.trim() });
+    setFormUserInfo({
+      ...formUserInfo,
+      [e.target.name]: e.target.value.trim(),
+    });
   };
 
   const handleProfilePicture = (e) => {
@@ -38,22 +49,27 @@ const UserFormComponent = ({ initialData, onCancel }) => {
       setError("All (*) fields are required.");
       return false;
     }
+
     if (password && password.length < 8) {
       setError("Password must be at least 8 characters long.");
       return false;
     }
+
     if (!validateEmail(email)) {
       setError("Invalid email format.");
       return false;
     }
+
     if (username.includes(" ")) {
       setError("Username cannot contain spaces.");
       return false;
     }
+
     if (!/^[a-zA-Z]+$/.test(name) || !/^[a-zA-Z]+$/.test(lastName)) {
       setError("Name and Last Name must contain only letters.");
       return false;
     }
+
     return true;
   };
 
@@ -67,80 +83,83 @@ const UserFormComponent = ({ initialData, onCancel }) => {
       }
     }
 
-    console.log("✅ Sending FormData:", [...formData.entries()]);
     return formData;
   };
 
-  const goHome = () => {
-    navigate("/");
-  };
+  const goHome = () => navigate("/");
 
   const handleSubmit = async () => {
     if (!validateFields()) return;
 
     try {
-        if (initialData) {
-            // Edit mode
-            if (!token) {
-                setError("Authentication error: No token found.");
-                return;
-            }
-
-            const updatedData = Object.keys(formUserInfo).reduce((acc, key) => {
-                if (formUserInfo[key] !== initialData[key] && formUserInfo[key] !== "") {
-                    acc[key] = formUserInfo[key];
-                }
-                return acc;
-            }, {});
-
-            const dataToSend = formUserInfo.profilePicture instanceof File
-                ? prepareFormData(updatedData)
-                : updatedData;
-
-            await updateUserFetch(token, dataToSend);
-            dispatch(updateUserAction(updatedData));
-            dispatch(activateEditMode(false));
-        } else {
-            // Registration mode: Send JSON if no profile picture is uploaded
-            let dataToSend = { ...formUserInfo };
-
-            if (formUserInfo.profilePicture instanceof File) {
-                const formData = new FormData();
-                Object.entries(formUserInfo).forEach(([key, value]) => {
-                    if (value !== undefined && value !== null) {
-                        formData.append(key, value);
-                    }
-                });
-
-                console.log("✅ Sending FormData for registration:", [...formData.entries()]);
-                dataToSend = formData;
-            } else {
-                console.log("✅ Sending JSON for registration:", dataToSend);
-            }
-
-            const userInfo = await signUpFetch(dataToSend);
-            if (!userInfo) {
-                setError("Signup failed. Try again.");
-                return;
-            }
-
-            dispatch(signUpAction(userInfo));
-            goHome();
+      if (initialData) {
+        // Edit mode
+        if (!token) {
+          setError("Authentication error: No token found.");
+          return;
         }
-    } catch (error) {
-        setError(error.message || "An error occurred.");
-    }
-};
 
+        const updatedData = Object.keys(formUserInfo).reduce((acc, key) => {
+          if (
+            formUserInfo[key] !== initialData[key] &&
+            formUserInfo[key] !== ""
+          ) {
+            acc[key] = formUserInfo[key];
+          }
+          return acc;
+        }, {});
+
+        const dataToSend =
+          formUserInfo.profilePicture instanceof File
+            ? prepareFormData(updatedData)
+            : updatedData;
+
+        setIsUpdating(true);
+        await updateUserFetch(token, dataToSend);
+        setIsUpdating(false);
+
+        dispatch(updateUserAction(updatedData));
+        dispatch(activateEditMode(false));
+
+      } else {
+        // Registration mode
+        let dataToSend = { ...formUserInfo };
+
+        if (formUserInfo.profilePicture instanceof File) {
+          const formData = new FormData();
+          Object.entries(formUserInfo).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+              formData.append(key, value);
+            }
+          });
+          dataToSend = formData;
+        }
+
+        const userInfo = await signUpFetch(dataToSend);
+        if (!userInfo) {
+          setError("Signup failed. Try again.");
+          return;
+        }
+
+        dispatch(signUpAction(userInfo));
+        goHome();
+      }
+    } catch (error) {
+      setIsUpdating(false);
+      setError(error.message || "An error occurred.");
+    }
+  };
 
   return (
     <div>
       {error && <div>{error}</div>}
-      {initialData && (
-        <div style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}>
-          ⚠️ If you change your profile picture, it may take a few minutes to update.
+
+      {isUpdating && (
+        <div>
+          <ClipLoader color="#444" size={30} />
         </div>
       )}
+
       <div>
         <span>Name (*): </span>
         <input
@@ -151,6 +170,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
           onChange={handleInputChange}
         />
       </div>
+
       <div>
         <span>Last name (*): </span>
         <input
@@ -161,6 +181,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
           onChange={handleInputChange}
         />
       </div>
+
       <div>
         <span>Username (*): </span>
         <input
@@ -171,6 +192,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
           onChange={handleInputChange}
         />
       </div>
+
       <div>
         <span>E-mail (*): </span>
         <input
@@ -181,6 +203,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
           onChange={handleInputChange}
         />
       </div>
+
       <div>
         <span>Password: </span>
         <input
@@ -190,14 +213,24 @@ const UserFormComponent = ({ initialData, onCancel }) => {
           onChange={handleInputChange}
         />
       </div>
+
       <div>
-        <span>Profile picture: </span>
+        <span>Profile picture (**): </span>
         <input type="file" accept="image/*" onChange={handleProfilePicture} />
       </div>
+
       <div>
-        <button onClick={handleSubmit}>{initialData ? "Save Changes" : "Sign up"}</button>
+        <p>(*) These fields cannot be empty.</p>
+        <p>(**) You may need to refresh the page to see changes in your profile picture.</p>
+      </div>
+
+      <div>
+        <button onClick={handleSubmit}>
+          {initialData ? "Save Changes" : "Sign up"}
+        </button>
         {initialData && <button onClick={onCancel}>Cancel</button>}
       </div>
+
       {!initialData && (
         <div>
           <span>Already have an account? </span>
