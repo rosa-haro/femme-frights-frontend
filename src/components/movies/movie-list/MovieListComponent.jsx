@@ -7,6 +7,7 @@ import { loadAllMoviesAction, setCurrentPageAction } from "../MoviesActions";
 import useToggleMovie from "../../../core/hooks/useToggleMovie";
 import { getUserByIdFetch } from "../../../core/services/userFetch";
 import { getUserDetailsAction, signOutAction } from "../../user/UserActions";
+import "./MovieListComponent.css";
 
 const MovieListComponent = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const MovieListComponent = () => {
       setLoading(false);
     }
   }, [location.pathname]);
-  
+
   useEffect(() => {
     if (isLogged && token) {
       loadUserInfo();
@@ -74,7 +75,7 @@ const MovieListComponent = () => {
       ? activeList
       : [];
 
-  const moviesPerPage = 6;
+  const moviesPerPage = 12;
   const totalPages = Math.ceil(list.length / moviesPerPage);
 
   // Reset current page if not valid
@@ -125,9 +126,9 @@ const MovieListComponent = () => {
   }
 
   return (
-    <div>
+    <div className="movie-list">
       {paginatedMovies.map((m) => (
-        <div key={m._id}>
+        <div className="movie-card" key={m._id}>
           {/* Movie poster */}
           <div>
             {!imageLoaded[m._id] && (
@@ -152,43 +153,44 @@ const MovieListComponent = () => {
               </a>
             </figcaption>
           </div>
+          {/* Movie info */}
+          <h3>{m.titleEnglish}</h3>
+          {m.titleEnglish !== m.titleOriginal && (
+            <div className="info">({m.titleOriginal})</div>
+          )}
 
-          {/* Movie details */}
-          <div>
-            <span>{m.titleEnglish}</span>
-            {m.titleEnglish !== m.titleOriginal && (
-              <span> ({m.titleOriginal})</span>
-            )}
-          </div>
+          <div className="info">Year: {m.year}</div>
+          <div className="info">Director: {m.director}</div>
+          <div className="actions">
+            <button className="details" onClick={() => goToDetails(m._id)}>
+              Details
+            </button>
 
-          <div>
-            <span>Year: </span>
-            <span>{m.year}</span>
-          </div>
-
-          <div>
-            <span>Director: </span>
-            <span>{m.director}</span>
-          </div>
-
-          {/* Action buttons (if user logged) */}
-          <div>
-            <button onClick={() => goToDetails(m._id)}>Details</button>
-
+            {/* Action buttons (only if logged) */}
             {isLogged && (
-              <>
-                <button onClick={() => handleToggleFavorite(m._id)}>
+              <div>
+                <button
+                  className={`button-outline ${
+                    isFavorite(m._id) ? "active" : ""
+                  }`}
+                  onClick={() => handleToggleFavorite(m._id)}
+                >
                   {isFavorite(m._id)
                     ? "Remove from favorites"
                     : "Add to favorites"}
                 </button>
 
-                <button onClick={() => handleToggleWatchlist(m._id)}>
+                <button
+                  className={`button-outline ${
+                    isInWatchlist(m._id) ? "active" : ""
+                  }`}
+                  onClick={() => handleToggleWatchlist(m._id)}
+                >
                   {isInWatchlist(m._id)
                     ? "Remove from watchlist"
                     : "Add to watchlist"}
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>

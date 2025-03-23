@@ -9,7 +9,7 @@ const PagerComponent = () => {
     (state) => state.moviesReducer
   );
 
-  const moviesPerPage = 6;
+  const moviesPerPage = 12;
 
   // Select the list to paginate: search results or active list (favlist, wachlist, general)
   const list =
