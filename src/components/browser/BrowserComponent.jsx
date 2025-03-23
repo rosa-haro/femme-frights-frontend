@@ -1,4 +1,3 @@
-// ✅ BrowserComponent.jsx - Estable con activeList, búsqueda y sort combinables
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -25,7 +24,7 @@ const BrowserComponent = () => {
     (state) => state.moviesReducer
   );
 
-  // Establecer la lista activa según la ruta
+  // Update active list depending on the route (Favorites / Watchlist) + reset filters
   useEffect(() => {
     dispatch(resetBrowserAction());
     setQuery("");
@@ -37,6 +36,7 @@ const BrowserComponent = () => {
     }
   }, [location.pathname, dispatch, favorites, watchlist]);
 
+  // Handle search input
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!query.trim()) return;
@@ -44,6 +44,7 @@ const BrowserComponent = () => {
     const searchTerm = query.toLowerCase();
     const listToSearch = [...activeList];
 
+    // If there is a local list in redux (favorites/watchlist)
     if (listToSearch.length > 0) {
       const filtered = listToSearch.filter((movie) =>
         movie.titleEnglish.toLowerCase().includes(searchTerm)
@@ -52,16 +53,16 @@ const BrowserComponent = () => {
       return;
     }
 
-    // Buscar desde API si no hay lista activa (Home sin datos todavía)
+    // If there is no local list: fetch
     try {
       const results = await searchMoviesFetch(query);
       dispatch(searchMoviesAction(results));
     } catch (error) {
-      console.error("Error searching:", error);
+      throw error;
     }
   };
 
-  // Ordenar sobre la lista activa
+  // Handle sort actions
   const handleSort = async (type) => {
     const getSorter =
       (key, asc = true) =>
@@ -70,6 +71,7 @@ const BrowserComponent = () => {
 
     const listToSort = hasSearched ? [...searchResults] : [...activeList];
 
+    // Sort local list (redux) if there is any (watchlist/favlist)
     if (listToSort.length > 0) {
       let sorted;
       if (type === "AZ") sorted = listToSort.sort(getSorter("titleEnglish"));
@@ -77,24 +79,29 @@ const BrowserComponent = () => {
         sorted = listToSort.sort(getSorter("year", true));
       else if (type === "yearDesc")
         sorted = listToSort.sort(getSorter("year", false));
+      else return;
+
       dispatch(sortMoviesAction(sorted));
       return;
     }
 
-    // Si no hay lista en memoria, usamos la API
+    // If there is no local list: fetch
     try {
       let result;
       if (type === "AZ") result = await sortMoviesAZFetch();
       else if (type === "yearAsc") result = await sortMoviesByYearAscFetch();
       else if (type === "yearDesc") result = await sortMoviesByYearDescFetch();
+      else return;
+
       dispatch(sortMoviesAction(result));
     } catch (error) {
-      console.error("Error sorting:", error);
+      throw error;
     }
   };
 
   return (
     <div>
+      {/* Sort */}
       <div>
         <select onChange={(e) => handleSort(e.target.value)} defaultValue="">
           <option value="" disabled>
@@ -104,6 +111,10 @@ const BrowserComponent = () => {
           <option value="yearAsc">Year (Oldest First)</option>
           <option value="yearDesc">Year (Newest First)</option>
         </select>
+      </div>
+
+      {/* Reset button */}
+      <div>
         <button
           onClick={() => {
             dispatch(resetBrowserAction());
@@ -114,6 +125,7 @@ const BrowserComponent = () => {
         </button>
       </div>
 
+      {/* Search */}
       <form onSubmit={handleSearch}>
         <input
           type="text"
