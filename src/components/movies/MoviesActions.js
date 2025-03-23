@@ -7,6 +7,7 @@ export const SEARCH_MOVIES = "SEARCH_MOVIES";
 export const SORT_MOVIES = "SORT_MOVIES";
 export const RESET_BROWSER = "RESET_BROWSER";
 export const SET_ACTIVE_LIST = "SET_ACTIVE_LIST";
+export const SET_CURRENT_PAGE = "SET_CURRENT_PAGE"
 
 // Cargar todas las películas (HOME)
 export const loadAllMoviesAction = (movies) => ({
@@ -42,3 +43,8 @@ export const setActiveListAction = (list) => ({
   type: SET_ACTIVE_LIST,
   payload: list
 });
+
+export const setCurrentPageAction = (page) => ({
+  type: SET_CURRENT_PAGE,
+  payload: page
+})

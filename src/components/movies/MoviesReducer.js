@@ -5,7 +5,8 @@ import {
     SEARCH_MOVIES,
     SORT_MOVIES,
     RESET_BROWSER,
-    SET_ACTIVE_LIST
+    SET_ACTIVE_LIST,
+    SET_CURRENT_PAGE
   } from "./MoviesActions";
   
   const initialState = {
@@ -14,7 +15,8 @@ import {
     activeList: [],        // Lista base sobre la que se opera
     searchResults: [],     // Resultado visible (búsqueda o sort)
     hasSearched: false,
-    hasSorted: false
+    hasSorted: false,
+    currentPage: 1
   };
   
   const moviesReducer = (state = initialState, action) => {
@@ -27,6 +29,7 @@ import {
           searchResults: action.payload,
           hasSearched: false,
           hasSorted: false,
+          currentPage: 1
         };
   
       case LOAD_ONE_MOVIE:
@@ -42,6 +45,7 @@ import {
           searchResults: action.payload,
           hasSearched: false,
           hasSorted: false,
+          currentPage: 1
         };
   
       case SEARCH_MOVIES:
@@ -50,6 +54,7 @@ import {
           searchResults: action.payload,
           hasSearched: true,
           hasSorted: false,
+          currentPage: 1
         };
   
       case SORT_MOVIES:
@@ -57,7 +62,8 @@ import {
           ...state,
           searchResults: action.payload,
           hasSorted: true,
-          hasSearched: true
+          hasSearched: true,
+          currentPage: 1
         };
   
       case RESET_BROWSER:
@@ -65,8 +71,14 @@ import {
           ...state,
           searchResults: [],
           hasSearched: false,
-          hasSorted: false
+          hasSorted: false,
+          currentPage: 1
         };
+      case SET_CURRENT_PAGE:
+        return {
+          ...state,
+          currentPage: action.payload
+        }
   
       default:
         return state;

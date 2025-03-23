@@ -1,15 +1,19 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentPageAction } from '../movies/MoviesActions';
 
-const PagerComponent = ({ currentPage, setCurrentPage }) => {
-  const { searchResults } = useSelector((state) => state.moviesReducer);
+const PagerComponent = () => {
+  const dispatch = useDispatch();
+  const { searchResults, currentPage } = useSelector((state) => state.moviesReducer);
   const moviesPerPage = 6;
 
-  const totalPages = Math.ceil(searchResults.length / moviesPerPage);
-
+  const totalPages = Array.isArray(searchResults)
+  ? Math.ceil(searchResults.length / moviesPerPage)
+  : 0;
+  
   const handleClick = (page) => {
     if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+      dispatch(setCurrentPageAction(page));
     }
   };
 
@@ -27,16 +31,16 @@ const PagerComponent = ({ currentPage, setCurrentPage }) => {
       ◀
     </button>
 
-    {Array.from({ length: totalPages }, (_, i) => (
+    {Array.from({ length: totalPages }, (_, idx) => (
       <button
-        key={i}
-        onClick={() => handleClick(i + 1)}
+        key={idx}
+        onClick={() => handleClick(idx + 1)}
         style={{
-          fontWeight: currentPage === i + 1 ? 'bold' : 'normal',
-          textDecoration: currentPage === i + 1 ? 'underline' : 'none'
+          fontWeight: currentPage === idx + 1 ? 'bold' : 'normal',
+          textDecoration: currentPage === idx + 1 ? 'underline' : 'none'
         }}
       >
-        {i + 1}
+        {idx + 1}
       </button>
     ))}
 

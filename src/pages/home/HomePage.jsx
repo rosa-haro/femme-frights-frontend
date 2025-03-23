@@ -5,13 +5,11 @@ import PagerComponent from '../../components/browser/PagerComponent'
 
 const HomePage = () => {
 
-  const [currentPage, setCurrentPage] = useState(1);
-
   return (
     <>
     <BrowserComponent/>
-    <MovieListComponent currentPage={currentPage} setCurrentPage={setCurrentPage}/>
-    <PagerComponent currentPage={setCurrentPage} setCurrentPage={setCurrentPage}/>
+    <MovieListComponent />
+    <PagerComponent />
     </>
   )
 }
