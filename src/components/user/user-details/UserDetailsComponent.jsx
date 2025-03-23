@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   deleteLoggedUserFetch,
   getUserByIdFetch,
-} from "../../core/services/userFetch";
+} from "../../../core/services/userFetch";
 import {
   deleteUserAction,
   getUserDetailsAction,
   signOutAction,
-} from "./UserActions";
+} from "../UserActions";
 import { useNavigate } from "react-router-dom";
-import { activateEditMode } from "../../core/redux/reducers/global/GlobalActions";
-import UserFormComponent from "./UserFormComponent";
+import { activateEditMode } from "../../../core/redux/reducers/global/GlobalActions";
+import UserFormComponent from "../user-form/UserFormComponent";
 import { ClipLoader } from "react-spinners";
 
 const UserDetailsComponent = () => {

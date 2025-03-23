@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMovieById } from "../../core/services/moviesFetch";
-import { loadOneMovieAction } from "./MoviesActions";
+import { getMovieById } from "../../../core/services/moviesFetch";
+import { loadOneMovieAction } from "../MoviesActions";
 import { useLocation } from "react-router-dom";
-import useToggleMovie from "../../core/hooks/useToggleMovie";
+import useToggleMovie from "../../../core/hooks/useToggleMovie";
 import { ClipLoader } from "react-spinners";
 
 const MovieDetailsComponent = () => {

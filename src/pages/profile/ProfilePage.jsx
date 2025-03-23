@@ -1,5 +1,5 @@
 import React from "react";
-import UserDetailsComponent from "../../components/user/UserDetailsComponent";
+import UserDetailsComponent from "../../components/user/user-details/UserDetailsComponent";
 
 const ProfilePage = () => {
   return (

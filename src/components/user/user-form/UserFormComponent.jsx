@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { signUpFetch, updateUserFetch } from "../../core/services/userFetch";
-import { signUpAction, updateUserAction } from "./UserActions";
+import { signUpFetch, updateUserFetch } from "../../../core/services/userFetch";
+import { signUpAction, updateUserAction } from "../UserActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { activateEditMode } from "../../core/redux/reducers/global/GlobalActions";
+import { activateEditMode } from "../../../core/redux/reducers/global/GlobalActions";
 import { ClipLoader } from "react-spinners";
 
 const UserFormComponent = ({ initialData, onCancel }) => {

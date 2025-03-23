@@ -14,8 +14,8 @@ const MainLayout = (props) => {
 
   // Handling token in localStorage (otherwise the session closes when refreshing the page)
   useEffect(() => {
+    
     const token = localStorage.getItem("token");
-
     if (token && token !== "undefined" && token.trim() !== "") {
       getUserByIdFetch(token)
         .then((user) => {

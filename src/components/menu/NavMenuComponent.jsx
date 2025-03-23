@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import "./NavMenuComponent.css"
 
 const NavMenuComponent = () => {
   const location = useLocation();
@@ -19,19 +20,19 @@ const NavMenuComponent = () => {
   return (
     <nav>
       {/* Buttons are disabled when already on the corresponding page */}
-      <button onClick={goToProfile} disabled={pathname === "/myprofile"}>
-        My Profile
-      </button>
-      <button onClick={goHome} disabled={pathname === "/"}>
+      <button className="button" onClick={goHome} disabled={pathname === "/"}>
         HOME
       </button>
-      <button onClick={goToFavorites} disabled={pathname === "/favorites"}>
+      <button className="button" onClick={goToProfile} disabled={pathname === "/myprofile"}>
+        My Profile
+      </button>
+      <button className="button" onClick={goToFavorites} disabled={pathname === "/favorites"}>
         Favorites
       </button>
-      <button onClick={goToWatchlist} disabled={pathname === "/watchlist"}>
+      <button className="button" onClick={goToWatchlist} disabled={pathname === "/watchlist"}>
         Watchlist
       </button>
-      <button onClick={goToContact} disabled={pathname === "/contact"}>
+      <button className="button" onClick={goToContact} disabled={pathname === "/contact"}>
         Contact
       </button>
     </nav>

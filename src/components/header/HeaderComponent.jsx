@@ -3,6 +3,7 @@ import NavMenuComponent from "../menu/NavMenuComponent";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutAction } from "../user/UserActions";
+import "./HeaderComponent.css";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const HeaderComponent = () => {
         <h1>Femme Frights</h1>
 
         {/* Sign in/out button */}
-        <button onClick={isLogged ? signOutHandler : goToSignIn}>
+        <button onClick={isLogged ? signOutHandler : goToSignIn} className="button-solid">
           {isLogged ? "Sign Out" : "Sign In"}
         </button>
       </div>

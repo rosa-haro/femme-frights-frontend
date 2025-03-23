@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { signInFetch } from "../../core/services/userFetch";
-import { signInAction } from "./UserActions";
+import { signInFetch } from "../../../core/services/userFetch";
+import { signInAction } from "../UserActions";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -34,7 +34,7 @@ const LoginComponent = () => {
       }
 
       dispatch(signInAction(userInfo));
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", userInfo.token);
       navigate("/");
     } catch (error) {
       setError(error.message || "An error occurred while signing in.");

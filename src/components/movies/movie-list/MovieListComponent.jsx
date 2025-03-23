@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loadAllMoviesAction, setCurrentPageAction } from "./MoviesActions";
-import { getAllMoviesFetch } from "../../core/services/moviesFetch";
-import { getUserByIdFetch } from "../../core/services/userFetch";
-import { getUserDetailsAction, signOutAction } from "../user/UserActions";
-import useToggleMovie from "../../core/hooks/useToggleMovie";
+import { loadAllMoviesAction, setCurrentPageAction } from "../MoviesActions";
+import { getAllMoviesFetch } from "../../../core/services/moviesFetch";
+import { getUserByIdFetch } from "../../../core/services/userFetch";
+import { getUserDetailsAction, signOutAction } from "../../user/UserActions";
+import useToggleMovie from "../../../core/hooks/useToggleMovie";
 import { ClipLoader } from "react-spinners";
 
 const MovieListComponent = () => {
