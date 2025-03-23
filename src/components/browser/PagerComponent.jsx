@@ -10,6 +10,7 @@ const PagerComponent = () => {
 
   const moviesPerPage = 6;
 
+  // Select the list to paginate: search results or active list (favlist, wachlist, general)
   const list =
     Array.isArray(searchResults) && hasSearched && searchResults.length > 0
       ? searchResults
@@ -19,14 +20,17 @@ const PagerComponent = () => {
 
   const totalPages = Math.ceil(list.length / moviesPerPage);
 
+  // Navigate to selected page
   const handleClick = (page) => {
     if (page >= 1 && page <= totalPages) {
       dispatch(setCurrentPageAction(page));
     }
   };
 
+  // Don't show pager if there's only 1 page
   if (totalPages <= 1) return null;
 
+  // Calculate page numbers to show (with ellipsis if applicable)
   const getVisiblePages = (current, total) => {
     const around = 1;
     const range = [];
@@ -36,27 +40,22 @@ const PagerComponent = () => {
 
     range.push(1);
 
-    if (left > 2) {
-      range.push('...');
-    }
+    if (left > 2) range.push('...');
 
     for (let i = left; i <= right; i++) {
       range.push(i);
     }
 
-    if (right < total - 1) {
-      range.push('...');
-    }
+    if (right < total - 1) range.push('...');
 
-    if (total > 1) {
-      range.push(total);
-    }
+    if (total > 1) range.push(total);
 
     return range;
   };
 
   return (
     <div>
+      {/* Previous button */}
       <button
         onClick={() => handleClick(currentPage - 1)}
         disabled={currentPage === 1}
@@ -64,6 +63,7 @@ const PagerComponent = () => {
         ◀
       </button>
 
+      {/* Page numbers */}
       {getVisiblePages(currentPage, totalPages).map((page, idx) => (
         <button
           key={idx}
@@ -74,6 +74,7 @@ const PagerComponent = () => {
         </button>
       ))}
 
+      {/* Next button */}
       <button
         onClick={() => handleClick(currentPage + 1)}
         disabled={currentPage === totalPages}
