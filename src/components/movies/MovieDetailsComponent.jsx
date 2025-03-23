@@ -39,6 +39,10 @@ const MovieDetailsComponent = () => {
       ) : (
         <div>
           <div>
+            <img src={selectedMovie.poster} alt="Movie poster" />
+            <figcaption>Image provided by <a href="https://www.themoviedb.org/" target="_blank">TMDb</a></figcaption>
+          </div>
+          <div>
             <span>{selectedMovie.titleEnglish}</span>
             {selectedMovie.titleEnglish !== selectedMovie.titleOriginal ? (
               <span>(Original: {selectedMovie.titleOriginal})</span>

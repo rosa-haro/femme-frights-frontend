@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loadAllMoviesAction, setActiveListAction, setCurrentPageAction } from "./MoviesActions";
+import {
+  loadAllMoviesAction,
+  setActiveListAction,
+  setCurrentPageAction,
+} from "./MoviesActions";
 import { getAllMoviesFetch } from "../../core/services/moviesFetch";
 import { getUserByIdFetch } from "../../core/services/userFetch";
 import { getUserDetailsAction, signOutAction } from "../user/UserActions";
@@ -12,62 +16,54 @@ const MovieListComponent = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { searchResults, hasSearched, activeList, currentPage } = useSelector((state) => state.moviesReducer);
-  const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie();
+  const { searchResults, hasSearched, activeList, currentPage } = useSelector(
+    (state) => state.moviesReducer
+  );
+  const {
+    isFavorite,
+    isInWatchlist,
+    handleToggleFavorite,
+    handleToggleWatchlist,
+    isLogged,
+  } = useToggleMovie();
   const { token } = useSelector((state) => state.userReducer);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (location.pathname === "/") {
-        const movieListAux = await getAllMoviesFetch();
-        dispatch(loadAllMoviesAction(movieListAux))
-      }
-
-      if (isLogged && token) {
-        try {
-          const auxUser = await getUserByIdFetch(token)
-          dispatch(getUserDetailsAction(auxUser))
-        } catch (error) {
-          console.error("Error fetching user info:", error);
-          dispatch(signOutAction())
-        }
-      }
+    if (location.pathname === "/") {
+      loadAllMovies();
     }
 
-    fetchData();
-  }, [location.pathname, isLogged, token, dispatch])
+    if (isLogged && token) {
+      loadUserInfo();
+    }
+  }, [location.pathname, isLogged, token, dispatch]);
 
-  // const loadAllMoviesList = async () => {
-  //   const movieListAux = await getAllMoviesFetch();
-  //   dispatch(loadAllMoviesAction(movieListAux));
-  //   dispatch(setActiveListAction(movieListAux));
-  // };
+  const loadAllMovies = async () => {
+    try {
+      const movieListAux = await getAllMoviesFetch();
+      dispatch(loadAllMoviesAction(movieListAux));
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    }
+  };
 
-  // const loadUserMovieList = async () => {
-  //   try {
-  //     const auxUser = await getUserByIdFetch(token);
-  //     dispatch(getUserDetailsAction(auxUser));
-  //   } catch (error) {
-  //     console.error("Error fetching user info:", error);
-  //     dispatch(signOutAction());
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (location.pathname === "/") {
-  //     loadAllMoviesList();
-  //     if (isLogged && token) {
-  //       loadUserMovieList();
-  //     }
-  //   }
-  // }, [location.pathname, isLogged, token]);
+  const loadUserInfo = async () => {
+    try {
+      const auxUser = await getUserByIdFetch(token);
+      dispatch(getUserDetailsAction(auxUser));
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      dispatch(signOutAction());
+    }
+  };
 
   // Validations to prevent errors if the list is not defined yet
-  const list = Array.isArray(searchResults) && hasSearched && searchResults.length > 0
-  ? searchResults
-  : Array.isArray(activeList) && activeList.length > 0
-  ? activeList
-  : [];
+  const list =
+    Array.isArray(searchResults) && hasSearched && searchResults.length > 0
+      ? searchResults
+      : Array.isArray(activeList) && activeList.length > 0
+      ? activeList
+      : [];
 
   const moviesPerPage = 6;
   const totalPages = Math.ceil(list.length / moviesPerPage);
@@ -105,6 +101,15 @@ const MovieListComponent = () => {
       {paginatedMovies.map((m, idx) => (
         <div key={idx}>
           <div>
+            <img src={m.poster} alt="Movie poster" />
+            <figcaption>
+              Image provided by{" "}
+              <a href="https://www.themoviedb.org/" target="_blank">
+                TMDb
+              </a>
+            </figcaption>
+          </div>
+          <div>
             <span>{m.titleEnglish}</span>
             {m.titleEnglish !== m.titleOriginal ? (
               <span> ({m.titleOriginal})</span>
@@ -120,15 +125,19 @@ const MovieListComponent = () => {
           </div>
           <div>
             <button onClick={() => goToDetails(m._id)}>Details</button>
-  
+
             {isLogged ? (
               <>
                 <button onClick={() => handleToggleFavorite(m._id)}>
-                  {isFavorite(m._id) ? "Remove from favorites" : "Add to favorites"}
+                  {isFavorite(m._id)
+                    ? "Remove from favorites"
+                    : "Add to favorites"}
                 </button>
-  
+
                 <button onClick={() => handleToggleWatchlist(m._id)}>
-                  {isInWatchlist(m._id) ? "Remove from watchlist" : "Add to watchlist"}
+                  {isInWatchlist(m._id)
+                    ? "Remove from watchlist"
+                    : "Add to watchlist"}
                 </button>
               </>
             ) : null}
@@ -137,6 +146,6 @@ const MovieListComponent = () => {
       ))}
     </div>
   );
-}
+};
 
 export default MovieListComponent;
