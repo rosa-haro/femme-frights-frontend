@@ -1,4 +1,3 @@
-// ✅ MoviesReducer.js
 import {
     LOAD_ALL_MOVIES,
     LOAD_ONE_MOVIE,
@@ -12,8 +11,8 @@ import {
   const initialState = {
     movies: [],
     selectedMovie: undefined,
-    activeList: [],        // Lista base sobre la que se opera
-    searchResults: [],     // Resultado visible (búsqueda o sort)
+    activeList: [],      
+    searchResults: [],    
     hasSearched: false,
     hasSorted: false,
     currentPage: 1
@@ -45,7 +44,6 @@ import {
           searchResults: action.payload,
           hasSearched: false,
           hasSorted: false,
-          currentPage: 1
         };
   
       case SEARCH_MOVIES:
