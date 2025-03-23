@@ -26,6 +26,7 @@ const UserDetailsComponent = () => {
   const loadUserDetails = async () => {
     if (!token) {
       dispatch(signOutAction());
+      localStorage.removeItem("token");
       return;
     }
     try {
@@ -33,6 +34,7 @@ const UserDetailsComponent = () => {
       dispatch(getUserDetailsAction(auxUser));
     } catch {
       dispatch(signOutAction());
+      localStorage.removeItem("token");
     } finally {
       setLoading(false);
     }
@@ -54,6 +56,7 @@ const UserDetailsComponent = () => {
 
   const signOutHandler = () => {
     dispatch(signOutAction());
+    localStorage.removeItem("token");
     goHome();
   };
 

@@ -5,7 +5,7 @@ import {
   SORT_MOVIES,
   RESET_BROWSER,
   SET_ACTIVE_LIST,
-  SET_CURRENT_PAGE
+  SET_CURRENT_PAGE,
 } from "./MoviesActions";
 
 // Initial state for movie-related data
@@ -16,7 +16,7 @@ const initialState = {
   searchResults: [],
   hasSearched: false,
   hasSorted: false,
-  currentPage: 1
+  currentPage: 1,
 };
 
 const moviesReducer = (state = initialState, action) => {
@@ -30,14 +30,14 @@ const moviesReducer = (state = initialState, action) => {
         searchResults: action.payload,
         hasSearched: false,
         hasSorted: false,
-        currentPage: 1
+        currentPage: 1,
       };
 
     case LOAD_ONE_MOVIE:
       // Load one movie by ID for detail view
       return {
         ...state,
-        selectedMovie: action.payload
+        selectedMovie: action.payload,
       };
 
     case SET_ACTIVE_LIST:
@@ -47,7 +47,7 @@ const moviesReducer = (state = initialState, action) => {
         activeList: action.payload,
         searchResults: action.payload,
         hasSearched: false,
-        hasSorted: false
+        hasSorted: false,
       };
 
     case SEARCH_MOVIES:
@@ -57,17 +57,17 @@ const moviesReducer = (state = initialState, action) => {
         searchResults: action.payload,
         hasSearched: true,
         hasSorted: false,
-        currentPage: 1
+        currentPage: 1,
       };
 
     case SORT_MOVIES:
-      // Sort current results 
+      // Sort current results
       return {
         ...state,
         searchResults: action.payload,
         hasSorted: true,
         hasSearched: true,
-        currentPage: 1
+        currentPage: 1,
       };
 
     case RESET_BROWSER:
@@ -77,14 +77,14 @@ const moviesReducer = (state = initialState, action) => {
         searchResults: [],
         hasSearched: false,
         hasSorted: false,
-        currentPage: 1
+        currentPage: 1,
       };
 
     case SET_CURRENT_PAGE:
       // Change current page
       return {
         ...state,
-        currentPage: action.payload
+        currentPage: action.payload,
       };
 
     default:

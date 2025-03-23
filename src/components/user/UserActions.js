@@ -13,8 +13,8 @@ export const signInAction = (payload) => {
     type: SIGN_IN,
     payload: {
       user: payload.user,
-      token: payload.token
-    }
+      token: payload.token,
+    },
   };
 };
 
@@ -22,7 +22,7 @@ export const signInAction = (payload) => {
 export const signUpAction = (user) => {
   return {
     type: SIGN_UP,
-    payload: user
+    payload: user,
   };
 };
 
@@ -30,21 +30,21 @@ export const signUpAction = (user) => {
 export const getUserDetailsAction = (payload) => {
   return {
     type: GET_USER_DETAILS,
-    payload
+    payload,
   };
 };
 
 // Sign out user
 export const signOutAction = () => {
   return {
-    type: SIGN_OUT
+    type: SIGN_OUT,
   };
 };
 
 // Delete user account
 export const deleteUserAction = () => {
   return {
-    type: DELETE_USER
+    type: DELETE_USER,
   };
 };
 
@@ -52,13 +52,13 @@ export const deleteUserAction = () => {
 export const updateUserAction = (updatedUserData) => {
   return {
     type: UPDATE_USER,
-    payload: updatedUserData
+    payload: updatedUserData,
   };
 };
 
 // Toggle password visibility in form inputs
 export const togglePasswordVisibility = () => {
   return {
-    type: TOGGLE_PASSWORD_VISIBILITY
+    type: TOGGLE_PASSWORD_VISIBILITY,
   };
 };

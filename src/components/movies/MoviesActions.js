@@ -11,7 +11,7 @@ export const SET_CURRENT_PAGE = "SET_CURRENT_PAGE";
 export const loadAllMoviesAction = (movies) => {
   return {
     type: LOAD_ALL_MOVIES,
-    payload: movies
+    payload: movies,
   };
 };
 
@@ -19,7 +19,7 @@ export const loadAllMoviesAction = (movies) => {
 export const loadOneMovieAction = (id) => {
   return {
     type: LOAD_ONE_MOVIE,
-    payload: id
+    payload: id,
   };
 };
 
@@ -27,7 +27,7 @@ export const loadOneMovieAction = (id) => {
 export const searchMoviesAction = (movies) => {
   return {
     type: SEARCH_MOVIES,
-    payload: movies
+    payload: movies,
   };
 };
 
@@ -35,14 +35,14 @@ export const searchMoviesAction = (movies) => {
 export const sortMoviesAction = (movies) => {
   return {
     type: SORT_MOVIES,
-    payload: movies
+    payload: movies,
   };
 };
 
 // Reset search and sort
 export const resetBrowserAction = () => {
   return {
-    type: RESET_BROWSER
+    type: RESET_BROWSER,
   };
 };
 
@@ -50,7 +50,7 @@ export const resetBrowserAction = () => {
 export const setActiveListAction = (list) => {
   return {
     type: SET_ACTIVE_LIST,
-    payload: list
+    payload: list,
   };
 };
 
@@ -58,6 +58,6 @@ export const setActiveListAction = (list) => {
 export const setCurrentPageAction = (page) => {
   return {
     type: SET_CURRENT_PAGE,
-    payload: page
+    payload: page,
   };
 };

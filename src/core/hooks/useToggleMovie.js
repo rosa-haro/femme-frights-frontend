@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getUserByIdFetch,
   toggleFavoriteFetch,
-  toggleWatchlistFetch
+  toggleWatchlistFetch,
 } from "../services/userFetch";
 import { getUserDetailsAction } from "../../components/user/UserActions";
 
 const useToggleMovie = () => {
   const dispatch = useDispatch();
-  const { favorites, watchlist, isLogged, token } = useSelector((state) => state.userReducer);
+  const { favorites, watchlist, isLogged, token } = useSelector(
+    (state) => state.userReducer
+  );
 
   // Check if a movie is already marked as favorite
   const isFavorite = (id) => favorites.some((fav) => fav._id === id);
@@ -49,7 +51,7 @@ const useToggleMovie = () => {
     isInWatchlist,
     handleToggleFavorite,
     handleToggleWatchlist,
-    isLogged
+    isLogged,
   };
 };
 

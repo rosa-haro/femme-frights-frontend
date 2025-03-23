@@ -20,7 +20,9 @@ const BrowserComponent = () => {
   const location = useLocation();
 
   const { favorites, watchlist } = useSelector((state) => state.userReducer);
-  const { activeList, hasSearched, searchResults } = useSelector((state) => state.moviesReducer );
+  const { activeList, hasSearched, searchResults } = useSelector(
+    (state) => state.moviesReducer
+  );
 
   // Update active list depending on the route (Favorites / Watchlist) + reset filters
   useEffect(() => {

@@ -1,4 +1,3 @@
-
 import { ACTIVATE_EDIT_MODE } from "./GlobalActions";
 
 const initialState = {

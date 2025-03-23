@@ -1,30 +1,31 @@
-import React from 'react'
-import NavMenuComponent from '../menu/NavMenuComponent'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { signOutAction } from '../user/UserActions'
+import React from "react";
+import NavMenuComponent from "../menu/NavMenuComponent";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signOutAction } from "../user/UserActions";
 
 const HeaderComponent = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const { isLogged, user } = useSelector((state) => state.userReducer)
+  const { isLogged, user } = useSelector((state) => state.userReducer);
 
   // Navigate to sign-in
   const goToSignIn = () => {
-    navigate("/signin")
-  }
+    navigate("/signin");
+  };
 
   // Navigate to Home page
   const goHome = () => {
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   // Sign out user and return to home
   const signOutHandler = () => {
-    dispatch(signOutAction())
-    goHome()
-  }
+    dispatch(signOutAction());
+    localStorage.removeItem("token");
+    goHome();
+  };
 
   return (
     <header>
@@ -50,7 +51,7 @@ const HeaderComponent = () => {
         <NavMenuComponent />
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default HeaderComponent
+export default HeaderComponent;

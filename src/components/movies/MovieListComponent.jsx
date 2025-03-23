@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  loadAllMoviesAction,
-  setCurrentPageAction,
-} from "./MoviesActions";
+import { loadAllMoviesAction, setCurrentPageAction } from "./MoviesActions";
 import { getAllMoviesFetch } from "../../core/services/moviesFetch";
 import { getUserByIdFetch } from "../../core/services/userFetch";
 import { getUserDetailsAction, signOutAction } from "../user/UserActions";
@@ -29,7 +26,7 @@ const MovieListComponent = () => {
   const { token } = useSelector((state) => state.userReducer);
 
   const [imageLoaded, setImageLoaded] = useState({});
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   // Load movies (and user data if logged) when on Home
   useEffect(() => {
@@ -43,14 +40,14 @@ const MovieListComponent = () => {
   }, [location.pathname, isLogged, token, dispatch]);
 
   const loadAllMovies = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const movieListAux = await getAllMoviesFetch();
       dispatch(loadAllMoviesAction(movieListAux));
     } catch (error) {
       throw error;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -59,6 +56,7 @@ const MovieListComponent = () => {
       const auxUser = await getUserByIdFetch(token);
       dispatch(getUserDetailsAction(auxUser));
     } catch (error) {
+      localStorage.removeItem("token");
       dispatch(signOutAction());
     }
   };
@@ -96,7 +94,6 @@ const MovieListComponent = () => {
     const aux = { ...imageLoaded, [id]: true };
     setImageLoaded(aux);
   };
-  
 
   // Show loading spinner while fetching movies
   if (loading) {
@@ -141,7 +138,11 @@ const MovieListComponent = () => {
             />
             <figcaption>
               Image provided by{" "}
-              <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">
+              <a
+                href="https://www.themoviedb.org/"
+                target="_blank"
+                rel="noreferrer"
+              >
                 TMDb
               </a>
             </figcaption>

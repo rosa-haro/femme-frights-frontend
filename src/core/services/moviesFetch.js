@@ -5,12 +5,14 @@ export const getAllMoviesFetch = async () => {
   try {
     const res = await fetch(`${apiUrlMovies}`, {
       method: "GET",
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
 
     const result = await res.json();
     if (!res.ok) {
-      throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
+      throw new Error(
+        result.message || `Error: ${res.status} - ${res.statusText}`
+      );
     }
 
     return result;
@@ -24,12 +26,14 @@ export const getMovieById = async (id) => {
   try {
     const res = await fetch(`${apiUrlMovies}/${id}`, {
       method: "GET",
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
 
     const result = await res.json();
     if (!res.ok) {
-      throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
+      throw new Error(
+        result.message || `Error: ${res.status} - ${res.statusText}`
+      );
     }
 
     return result;
@@ -43,12 +47,14 @@ export const searchMoviesFetch = async (title) => {
   try {
     const res = await fetch(`${apiUrlMovies}/search/title?title=${title}`, {
       method: "GET",
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
 
     const result = await res.json();
     if (!res.ok) {
-      throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
+      throw new Error(
+        result.message || `Error: ${res.status} - ${res.statusText}`
+      );
     }
 
     return result;
@@ -64,7 +70,9 @@ export const sortMoviesAZFetch = async () => {
     const result = await res.json();
 
     if (!res.ok) {
-      throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
+      throw new Error(
+        result.message || `Error: ${res.status} - ${res.statusText}`
+      );
     }
 
     return result;
@@ -80,7 +88,9 @@ export const sortMoviesByYearAscFetch = async () => {
     const result = await res.json();
 
     if (!res.ok) {
-      throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
+      throw new Error(
+        result.message || `Error: ${res.status} - ${res.statusText}`
+      );
     }
 
     return result;
@@ -96,7 +106,9 @@ export const sortMoviesByYearDescFetch = async () => {
     const result = await res.json();
 
     if (!res.ok) {
-      throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
+      throw new Error(
+        result.message || `Error: ${res.status} - ${res.statusText}`
+      );
     }
 
     return result;

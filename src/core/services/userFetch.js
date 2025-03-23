@@ -6,12 +6,14 @@ export const signInFetch = async (username, password) => {
     const res = await fetch(`${apiUrl}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password }),
     });
 
     const result = await res.json();
     if (!res.ok) {
-      throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
+      throw new Error(
+        result.message || `Error: ${res.status} - ${res.statusText}`
+      );
     }
 
     return result;
@@ -36,7 +38,9 @@ export const signUpFetch = async (newUser) => {
     const result = await res.json();
 
     if (!res.ok) {
-      throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
+      throw new Error(
+        result.message || `Error: ${res.status} - ${res.statusText}`
+      );
     }
 
     return result.user;
@@ -57,8 +61,8 @@ export const getUserByIdFetch = async (token) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": token
-      }
+        "auth-token": token,
+      },
     });
 
     if (!res.ok) {
@@ -86,8 +90,8 @@ export const deleteLoggedUserFetch = async (token) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": token
-      }
+        "auth-token": token,
+      },
     });
 
     if (!res.ok) {
@@ -111,7 +115,7 @@ export const updateUserFetch = async (token, updatedUserData) => {
   try {
     const options = {
       method: "PATCH",
-      headers: { "auth-token": token }
+      headers: { "auth-token": token },
     };
 
     if (updatedUserData instanceof FormData) {
@@ -146,8 +150,8 @@ export const toggleFavoriteFetch = async (token, idMovie) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": token
-      }
+        "auth-token": token,
+      },
     });
 
     if (!res.ok) {
@@ -175,8 +179,8 @@ export const toggleWatchlistFetch = async (token, idMovie) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": token
-      }
+        "auth-token": token,
+      },
     });
 
     if (!res.ok) {

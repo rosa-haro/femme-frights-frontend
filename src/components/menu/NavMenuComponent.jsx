@@ -1,13 +1,13 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React from "react";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NavMenuComponent = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const { pathname } = location;
-  const { isLogged } = useSelector(state => state.userReducer);
+  const { isLogged } = useSelector((state) => state.userReducer);
 
   // Navigation handlers: if it requires login, it navigates to Sign-in page
   const goHome = () => navigate("/");

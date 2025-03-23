@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { signInFetch } from '../../core/services/userFetch';
-import { signInAction } from './UserActions';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { signInFetch } from "../../core/services/userFetch";
+import { signInAction } from "./UserActions";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   // Check that fields are filled
   const validateSignInFields = () => {
     if (!username || !password) {
-      setError('Username and password are required.');
+      setError("Username and password are required.");
       return false;
     }
     return true;
@@ -23,20 +23,21 @@ const LoginComponent = () => {
 
   // Sign in handler
   const signIn = async () => {
-    setError('');
+    setError("");
     if (!validateSignInFields()) return;
 
     try {
       const userInfo = await signInFetch(username.trim(), password);
       if (!userInfo || !userInfo.token) {
-        setError('Invalid username or password.');
+        setError("Invalid username or password.");
         return;
       }
 
       dispatch(signInAction(userInfo));
-      navigate('/');
+      localStorage.setItem("token", token);
+      navigate("/");
     } catch (error) {
-      setError(error.message || 'An error occurred while signing in.');
+      setError(error.message || "An error occurred while signing in.");
     }
   };
 

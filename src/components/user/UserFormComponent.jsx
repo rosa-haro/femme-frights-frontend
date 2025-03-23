@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  signUpFetch,
-  updateUserFetch,
-} from "../../core/services/userFetch";
-import {
-  signUpAction,
-  updateUserAction,
-} from "./UserActions";
+import { signUpFetch, updateUserFetch } from "../../core/services/userFetch";
+import { signUpAction, updateUserAction } from "./UserActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { activateEditMode } from "../../core/redux/reducers/global/GlobalActions";
@@ -120,7 +114,6 @@ const UserFormComponent = ({ initialData, onCancel }) => {
 
         dispatch(updateUserAction(updatedData));
         dispatch(activateEditMode(false));
-
       } else {
         // Registration mode
         let dataToSend = { ...formUserInfo };
@@ -221,7 +214,10 @@ const UserFormComponent = ({ initialData, onCancel }) => {
 
       <div>
         <p>(*) These fields cannot be empty.</p>
-        <p>(**) You may need to refresh the page to see changes in your profile picture.</p>
+        <p>
+          (**) You may need to refresh the page to see changes in your profile
+          picture.
+        </p>
       </div>
 
       <div>

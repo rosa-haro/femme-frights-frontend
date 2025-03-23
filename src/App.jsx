@@ -11,6 +11,7 @@ import MainLayout from "./layouts/MainLayout";
 import FavoritesPage from "./pages/favorites/FavoritesPage";
 import WatchlistPage from "./pages/watchlist/WatchlistPage";
 import SignInPage from "./pages/sign-in/SignInPage";
+import BrowserLayout from "./layouts/BrowserLayout";
 
 function App() {
   return (
@@ -18,14 +19,16 @@ function App() {
       <BrowserRouter>
         <MainLayout>
           <Routes>
-            <Route path="/" element={<HomePage />} />
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/details" element={<DetailsPage />} />
             <Route path="/myprofile" element={<ProfilePage />} />
-            <Route path="/favorites" element={<FavoritesPage />} />
-            <Route path="/watchlist" element={<WatchlistPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route element={<BrowserLayout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/favorites" element={<FavoritesPage />} />
+              <Route path="/watchlist" element={<WatchlistPage />} />
+            </Route>
           </Routes>
         </MainLayout>
       </BrowserRouter>

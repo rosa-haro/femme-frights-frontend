@@ -1,6 +1,6 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentPageAction } from '../movies/MoviesActions';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentPageAction } from "../movies/MoviesActions";
 
 const PagerComponent = () => {
   const dispatch = useDispatch();
@@ -40,13 +40,13 @@ const PagerComponent = () => {
 
     range.push(1);
 
-    if (left > 2) range.push('...');
+    if (left > 2) range.push("...");
 
     for (let i = left; i <= right; i++) {
       range.push(i);
     }
 
-    if (right < total - 1) range.push('...');
+    if (right < total - 1) range.push("...");
 
     if (total > 1) range.push(total);
 
@@ -67,8 +67,8 @@ const PagerComponent = () => {
       {getVisiblePages(currentPage, totalPages).map((page, idx) => (
         <button
           key={idx}
-          onClick={() => typeof page === 'number' && handleClick(page)}
-          disabled={page === '...' || page === currentPage}
+          onClick={() => typeof page === "number" && handleClick(page)}
+          disabled={page === "..." || page === currentPage}
         >
           {page}
         </button>

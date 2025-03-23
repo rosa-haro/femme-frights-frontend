@@ -4,7 +4,9 @@ import userReducer from "../../../components/user/UserReducer";
 import globalReducer from "./global/GlobalReducer";
 
 const reducers = combineReducers({
-  moviesReducer, userReducer, globalReducer
+  moviesReducer,
+  userReducer,
+  globalReducer,
 });
 
 export default reducers;
