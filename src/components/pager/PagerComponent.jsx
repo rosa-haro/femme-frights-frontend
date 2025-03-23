@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPageAction } from "../movies/MoviesActions";
+import "./PagerComponent.css"
 
 const PagerComponent = () => {
   const dispatch = useDispatch();
@@ -54,7 +55,7 @@ const PagerComponent = () => {
   };
 
   return (
-    <div>
+    <div className="pager">
       {/* Previous button */}
       <button
         onClick={() => handleClick(currentPage - 1)}

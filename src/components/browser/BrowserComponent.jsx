@@ -12,29 +12,39 @@ import {
   sortMoviesAction,
   setActiveListAction,
 } from "../movies/MoviesActions";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import "./BrowserComponent.css";
 
 const BrowserComponent = () => {
   const [query, setQuery] = useState("");
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const { favorites, watchlist } = useSelector((state) => state.userReducer);
+  const { pathname } = location;
+  const { favorites, watchlist, isLogged } = useSelector((state) => state.userReducer);
   const { activeList, hasSearched, searchResults } = useSelector(
     (state) => state.moviesReducer
   );
 
-  // Update active list depending on the route (Favorites / Watchlist) + reset filters
+  // Reset filters when route changes
   useEffect(() => {
     dispatch(resetBrowserAction());
     setQuery("");
+  }, [pathname, dispatch]);
 
-    if (location.pathname === "/favorites") {
+  // Set active list (favorites/watchlist) if route matches
+  useEffect(() => {
+    if (pathname === "/favorites" && Array.isArray(favorites)) {
       dispatch(setActiveListAction(favorites));
-    } else if (location.pathname === "/watchlist") {
+    } else if (pathname === "/watchlist" && Array.isArray(watchlist)) {
       dispatch(setActiveListAction(watchlist));
     }
-  }, [location.pathname, dispatch, favorites, watchlist]);
+  }, [pathname, favorites, watchlist, dispatch]);
+
+  // Navigation handlers
+  const goToFavorites = () => navigate(isLogged ? "/favorites" : "/signin");
+  const goToWatchlist = () => navigate(isLogged ? "/watchlist" : "/signin");
 
   // Handle search input
   const handleSearch = async (e) => {
@@ -100,7 +110,23 @@ const BrowserComponent = () => {
   };
 
   return (
-    <div>
+    <div className="browser-container">
+      <div className="browser-navmenu">
+        <button
+          className="button"
+          onClick={goToFavorites}
+          disabled={pathname === "/favorites"}
+        >
+          Favorites
+        </button>
+        <button
+          className="button"
+          onClick={goToWatchlist}
+          disabled={pathname === "/watchlist"}
+        >
+          Watchlist
+        </button>
+      </div>
       {/* Sort */}
       <div>
         <select onChange={(e) => handleSort(e.target.value)} defaultValue="">
@@ -116,6 +142,7 @@ const BrowserComponent = () => {
       {/* Reset button */}
       <div>
         <button
+          className="button"
           onClick={() => {
             dispatch(resetBrowserAction());
             setQuery("");
@@ -133,7 +160,9 @@ const BrowserComponent = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button type="submit">Search</button>
+        <button type="submit" className="button">
+          Search
+        </button>
       </form>
     </div>
   );

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loadAllMoviesAction, setCurrentPageAction } from "../MoviesActions";
+import { ClipLoader } from "react-spinners";
 import { getAllMoviesFetch } from "../../../core/services/moviesFetch";
+import { loadAllMoviesAction, setCurrentPageAction } from "../MoviesActions";
+import useToggleMovie from "../../../core/hooks/useToggleMovie";
 import { getUserByIdFetch } from "../../../core/services/userFetch";
 import { getUserDetailsAction, signOutAction } from "../../user/UserActions";
-import useToggleMovie from "../../../core/hooks/useToggleMovie";
-import { ClipLoader } from "react-spinners";
 
 const MovieListComponent = () => {
   const navigate = useNavigate();
@@ -31,13 +31,18 @@ const MovieListComponent = () => {
   // Load movies (and user data if logged) when on Home
   useEffect(() => {
     if (location.pathname === "/") {
+      setLoading(true);
       loadAllMovies();
+    } else {
+      setLoading(false);
     }
-
+  }, [location.pathname]);
+  
+  useEffect(() => {
     if (isLogged && token) {
       loadUserInfo();
     }
-  }, [location.pathname, isLogged, token, dispatch]);
+  }, [isLogged, token]);
 
   const loadAllMovies = async () => {
     setLoading(true);

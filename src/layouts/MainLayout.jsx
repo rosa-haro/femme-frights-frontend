@@ -13,24 +13,30 @@ const MainLayout = (props) => {
   const dispatch = useDispatch();
 
   // Handling token in localStorage (otherwise the session closes when refreshing the page)
-  useEffect(() => {
-    
+  const loadUserDetails = async () => {
     const token = localStorage.getItem("token");
-    if (token && token !== "undefined" && token.trim() !== "") {
-      getUserByIdFetch(token)
-        .then((user) => {
-          if (user) {
-            dispatch(getUserDetailsAction(user));
-          } else {
-            throw new Error("No user returned");
-          }
-        })
-        .catch(() => {
-          localStorage.removeItem("token");
-          dispatch(signOutAction());
-        });
+
+    if (!token || token === "undefined" || token.trim() === "") {
+      dispatch(signOutAction());
+      localStorage.removeItem("token");
+      setLoading(false);
+      return;
     }
-  }, [dispatch]);
+
+    try {
+      const auxUser = await getUserByIdFetch(token);
+      if (!auxUser) throw new Error("User not found");
+
+      dispatch(getUserDetailsAction(auxUser));
+    } catch (error) {
+      dispatch(signOutAction());
+      localStorage.removeItem("token");
+    }
+  };
+
+  useEffect(() => {
+    loadUserDetails();
+  }, []);
 
   return (
     <div>
