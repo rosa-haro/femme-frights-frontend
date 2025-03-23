@@ -1,20 +1,15 @@
 const apiUrl = import.meta.env.VITE_API_URL;
 
+// Sign in with username and password
 export const signInFetch = async (username, password) => {
   try {
     const res = await fetch(`${apiUrl}/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
     });
 
-    console.log("Sign-in API response status: ", res.status)
-
     const result = await res.json();
-    console.log("Raw API response status: ", res.status)
-    
     if (!res.ok) {
       throw new Error(result.message || `Error: ${res.status} - ${res.statusText}`);
     }
@@ -25,9 +20,10 @@ export const signInFetch = async (username, password) => {
   }
 };
 
+// Sign up new user (JSON, or FormData for profile picture)
 export const signUpFetch = async (newUser) => {
   try {
-    let options = { method: "POST" };
+    const options = { method: "POST" };
 
     if (newUser instanceof FormData) {
       options.body = newUser;
@@ -49,42 +45,39 @@ export const signUpFetch = async (newUser) => {
   }
 };
 
+// Get current user profile
 export const getUserByIdFetch = async (token) => {
   if (!token) {
-    console.error("No token available in getUserByIdFetch.");
+    console.error("Token is required for getUserByIdFetch.");
     return null;
   }
 
   try {
-    console.log("Fetching with token: ", token);
     const res = await fetch(`${apiUrl}/users/myprofile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": `${token}`
-            }
+        "auth-token": token
+      }
     });
-
-    console.log("API Response Status:", res.status);
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.error("Error response text:", errorText);
       throw new Error(`Error: ${res.status} - ${errorText}`);
     }
 
     const userData = await res.json();
-    console.log("User data received from API:", userData);
-    return {user: userData, token}; //ESTO ES LO QUE HE HECHO PARA ARREGLAR EL PROBLEMA!!!
+    return { user: userData, token };
   } catch (error) {
     console.error("Error in getUserByIdFetch:", error.message);
     return null;
   }
 };
 
+// Delete current user
 export const deleteLoggedUserFetch = async (token) => {
   if (!token) {
-    console.error("No token available in deleteLoggedUserFetch.");
+    console.error("Token is required for deleteLoggedUserFetch.");
     return null;
   }
 
@@ -93,7 +86,7 @@ export const deleteLoggedUserFetch = async (token) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": `${token}`
+        "auth-token": token
       }
     });
 
@@ -108,27 +101,24 @@ export const deleteLoggedUserFetch = async (token) => {
   }
 };
 
+// Update user profile (JSON, or FormData for profile picture)
 export const updateUserFetch = async (token, updatedUserData) => {
   if (!token) {
-    console.error("No token available in updateUserFetch.");
+    console.error("Token is required for updateUserFetch.");
     return null;
   }
 
   try {
-    let options = {
+    const options = {
       method: "PATCH",
-      headers: {
-        "auth-token": token
-      }
+      headers: { "auth-token": token }
     };
 
     if (updatedUserData instanceof FormData) {
       options.body = updatedUserData;
-      console.log("🚀 Enviando FormData a la API:", [...updatedUserData.entries()]); // Depuración
     } else {
       options.headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(updatedUserData);
-      console.log("🚀 Enviando JSON a la API:", options.body); // Depuración
     }
 
     const res = await fetch(`${apiUrl}/users/myprofile`, options);
@@ -144,9 +134,10 @@ export const updateUserFetch = async (token, updatedUserData) => {
   }
 };
 
+// Toggle favorite movie (add/remove)
 export const toggleFavoriteFetch = async (token, idMovie) => {
   if (!token) {
-    console.error("No token available in toggleFavoriteFetch.");
+    console.error("Token is required for toggleFavoriteFetch.");
     return null;
   }
 
@@ -155,8 +146,8 @@ export const toggleFavoriteFetch = async (token, idMovie) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": `${token}`,
-      },
+        "auth-token": token
+      }
     });
 
     if (!res.ok) {
@@ -172,9 +163,10 @@ export const toggleFavoriteFetch = async (token, idMovie) => {
   }
 };
 
+// Toggle watchlist movie (add/remove)
 export const toggleWatchlistFetch = async (token, idMovie) => {
   if (!token) {
-    console.error("No token available in toggleWatchlistFetch.");
+    console.error("Token is required for toggleWatchlistFetch.");
     return null;
   }
 
@@ -183,8 +175,8 @@ export const toggleWatchlistFetch = async (token, idMovie) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": `${token}`,
-      },
+        "auth-token": token
+      }
     });
 
     if (!res.ok) {
@@ -193,7 +185,7 @@ export const toggleWatchlistFetch = async (token, idMovie) => {
     }
 
     const result = await res.json();
-    return result.watchlist; 
+    return result.watchlist;
   } catch (error) {
     console.error("Error in toggleWatchlistFetch:", error.message);
     throw error;
