@@ -13,7 +13,7 @@ const MovieDetailsComponent = () => {
   const { _id } = state;
 
   const { selectedMovie } = useSelector((state) => state.moviesReducer);
-  const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie(); // ✅ Usamos el hook
+  const { isFavorite, isInWatchlist, handleToggleFavorite, handleToggleWatchlist, isLogged } = useToggleMovie(); 
 
   useEffect(() => {
     loadSelectedMovie();
@@ -38,6 +38,10 @@ const MovieDetailsComponent = () => {
         <div><p>Loading...</p></div>
       ) : (
         <div>
+          <div>
+            <img src={selectedMovie.poster} alt="Movie poster" />
+            <figcaption>Image provided by <a href="https://www.themoviedb.org/" target="_blank">TMDb</a></figcaption>
+          </div>
           <div>
             <span>{selectedMovie.titleEnglish}</span>
             {selectedMovie.titleEnglish !== selectedMovie.titleOriginal ? (
