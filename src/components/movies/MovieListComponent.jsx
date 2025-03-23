@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   loadAllMoviesAction,
-  setActiveListAction,
   setCurrentPageAction,
 } from "./MoviesActions";
 import { getAllMoviesFetch } from "../../core/services/moviesFetch";
 import { getUserByIdFetch } from "../../core/services/userFetch";
 import { getUserDetailsAction, signOutAction } from "../user/UserActions";
 import useToggleMovie from "../../core/hooks/useToggleMovie";
+import { ClipLoader } from "react-spinners";
 
 const MovieListComponent = () => {
   const navigate = useNavigate();
@@ -28,6 +28,10 @@ const MovieListComponent = () => {
   } = useToggleMovie();
   const { token } = useSelector((state) => state.userReducer);
 
+  const [imageLoaded, setImageLoaded] = useState({});
+  const [loading, setLoading] = useState(true)
+
+  // Load movies (and user data if logged) when on Home
   useEffect(() => {
     if (location.pathname === "/") {
       loadAllMovies();
@@ -39,11 +43,14 @@ const MovieListComponent = () => {
   }, [location.pathname, isLogged, token, dispatch]);
 
   const loadAllMovies = async () => {
+    setLoading(true)
     try {
       const movieListAux = await getAllMoviesFetch();
       dispatch(loadAllMoviesAction(movieListAux));
     } catch (error) {
-      console.error("Error fetching movies:", error);
+      throw error;
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -52,12 +59,11 @@ const MovieListComponent = () => {
       const auxUser = await getUserByIdFetch(token);
       dispatch(getUserDetailsAction(auxUser));
     } catch (error) {
-      console.error("Error fetching user info:", error);
       dispatch(signOutAction());
     }
   };
 
-  // Validations to prevent errors if the list is not defined yet
+  // Select movie list to display (search or active list: favlist, watchlist, general)
   const list =
     Array.isArray(searchResults) && hasSearched && searchResults.length > 0
       ? searchResults
@@ -68,6 +74,7 @@ const MovieListComponent = () => {
   const moviesPerPage = 6;
   const totalPages = Math.ceil(list.length / moviesPerPage);
 
+  // Reset current page if not valid
   useEffect(() => {
     if (currentPage > totalPages && totalPages > 0) {
       dispatch(setCurrentPageAction(1));
@@ -84,49 +91,85 @@ const MovieListComponent = () => {
 
   const isSearching = hasSearched && searchResults?.length === 0;
 
-  return !Array.isArray(list) ? (
-    <p>Loading movies...</p>
-  ) : paginatedMovies.length === 0 ? (
-    <p>
-      {isSearching
-        ? "No search results."
-        : location.pathname === "/"
-        ? "No movies to show"
-        : location.pathname === "/favorites"
-        ? "Your favorites list is empty."
-        : "Your watchlist is empty."}
-    </p>
-  ) : (
+  // Handle image load state
+  const handleImageLoad = (id) => {
+    const aux = { ...imageLoaded, [id]: true };
+    setImageLoaded(aux);
+  };
+  
+
+  // Show loading spinner while fetching movies
+  if (loading) {
+    return (
+      <div>
+        <ClipLoader color="#444" size={50} />
+      </div>
+    );
+  }
+
+  // Show message if list is empty
+  if (paginatedMovies.length === 0) {
+    return (
+      <p>
+        {isSearching
+          ? "No search results."
+          : location.pathname === "/"
+          ? "No movies to show"
+          : location.pathname === "/favorites"
+          ? "Your favorites list is empty."
+          : "Your watchlist is empty."}
+      </p>
+    );
+  }
+
+  return (
     <div>
-      {paginatedMovies.map((m, idx) => (
-        <div key={idx}>
+      {paginatedMovies.map((m) => (
+        <div key={m._id}>
+          {/* Movie poster */}
           <div>
-            <img src={m.poster} alt="Movie poster" />
+            {!imageLoaded[m._id] && (
+              <div>
+                <ClipLoader color="#888" size={30} />
+              </div>
+            )}
+            <img
+              src={m.poster}
+              alt="Movie poster"
+              onLoad={() => handleImageLoad(m._id)}
+              style={{ display: imageLoaded[m._id] ? "block" : "none" }}
+            />
             <figcaption>
               Image provided by{" "}
-              <a href="https://www.themoviedb.org/" target="_blank">
+              <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">
                 TMDb
               </a>
             </figcaption>
           </div>
+
+          {/* Movie details */}
           <div>
             <span>{m.titleEnglish}</span>
-            {m.titleEnglish !== m.titleOriginal ? (
+            {m.titleEnglish !== m.titleOriginal && (
               <span> ({m.titleOriginal})</span>
-            ) : null}
+            )}
           </div>
+
           <div>
             <span>Year: </span>
             <span>{m.year}</span>
           </div>
+
           <div>
             <span>Director: </span>
             <span>{m.director}</span>
           </div>
+
+          {/* Action buttons (if user logged) */}
           <div>
             <button onClick={() => goToDetails(m._id)}>Details</button>
 
-            {isLogged ? (
+            {isLogged && (
               <>
                 <button onClick={() => handleToggleFavorite(m._id)}>
                   {isFavorite(m._id)
@@ -140,7 +183,7 @@ const MovieListComponent = () => {
                     : "Add to watchlist"}
                 </button>
               </>
-            ) : null}
+            )}
           </div>
         </div>
       ))}
