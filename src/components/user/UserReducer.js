@@ -40,6 +40,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
+        isLogged: true,
         favorites: action.payload.user.favorites,
         watchlist: action.payload.user.watchlist,
       };
