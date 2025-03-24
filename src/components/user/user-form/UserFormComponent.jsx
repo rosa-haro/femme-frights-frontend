@@ -180,7 +180,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
           </div>
         </div>
       )}
-      <h2>Sign up</h2>
+      {!initialData? (<h2>Sign up</h2> ) : (<h2>Edit profile</h2>  )}
       <div className="form-group">
         <label>Name{!initialData && " (*)"}</label>
         <input
@@ -242,7 +242,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
 
       <div className="form-note">
         {initialData ? (
-          <p>(*) Updating profile picture may require refreshing the page.</p>
+          <p className="edit-warning">Note(*): Updating profile picture may require refreshing the page.</p>
         ) : (
           <p>All (*) fields are required.</p>
         )}

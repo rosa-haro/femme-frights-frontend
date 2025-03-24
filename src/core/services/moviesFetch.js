@@ -138,7 +138,7 @@ export const getTMDBPosterUrl = async (tmdbId) => {
     sessionStorage.setItem(cacheKey, url);
     return url;
   } catch (error) {
-    console.error("Error fetching TMDB poster:", error);
+    throw error
     return "/fallback-poster.jpg";
   }
 };

@@ -45,7 +45,7 @@ const ContactComponent = () => {
       setStatus("success");
       setFormData({ name: "", email: "", title: "", message: "" });
     } catch (error) {
-      console.error("Email sending error:", error);
+      throw error
       setStatus("error");
     }
   };
@@ -57,19 +57,20 @@ const ContactComponent = () => {
         {formError && <p className="form-error">{formError}</p>}
         <div className="form-group">
           <label>Your name:</label>
+          <input name="name" value={formData.name} onChange={handleChange} />
+        </div>
+        <div className="form-group">
+          <label>Your email:</label>
           <input
-            name="name"
-            value={formData.name}
+            type="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
           />
         </div>
         <div className="form-group">
           <label>Subject:</label>
-          <input
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-          />
+          <input name="title" value={formData.title} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label>Your message:</label>

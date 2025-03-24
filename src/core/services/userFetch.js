@@ -73,8 +73,7 @@ export const getUserByIdFetch = async (token) => {
     const userData = await res.json();
     return { user: userData, token };
   } catch (error) {
-    console.error("Error in getUserByIdFetch:", error.message);
-    return null;
+    throw error;
   }
 };
 
