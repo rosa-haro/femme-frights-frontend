@@ -131,13 +131,15 @@ const UserDetailsComponent = () => {
         <div className="user-profile">
           {/* Back button */}
           <div className="top-row">
+            <div className="button-placeholder"/>
+            <h2 className="profile-title">My Profile</h2>
             <button className="back-button" onClick={goHome}>
               <img
                 src="/icons/left-arrow.svg"
                 alt="Back"
                 width={20}
                 height={20}
-              />
+                />
             </button>
           </div>
 

@@ -44,6 +44,7 @@ const LoginComponent = () => {
 
   return (
     <div className="user-form compact">
+      <h2>Sign in</h2>
       {/* Error message */}
       {error && <div className="form-error">{error}</div>}
 

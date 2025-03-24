@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../user/user-form/UserFormComponent.css"
+import "./ContactComponent.css";
 import { send } from "@emailjs/browser";
 
 const ContactComponent = () => {
@@ -11,6 +11,7 @@ const ContactComponent = () => {
   });
 
   const [status, setStatus] = useState("");
+  const [formError, setFormError] = useState("");
 
   // Handle form input
   const handleChange = (e) => {
@@ -20,6 +21,18 @@ const ContactComponent = () => {
   // Handle submit event
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.title ||
+      !formData.message
+    ) {
+      setFormError("All fields are required.");
+      return;
+    }
+
+    setFormError("");
+    setStatus("sending");
     setStatus("sending");
 
     try {
@@ -36,19 +49,18 @@ const ContactComponent = () => {
       setStatus("error");
     }
   };
-  
   return (
     <div className="contact-form">
       <h2>Contact Us</h2>
 
       <form onSubmit={handleSubmit}>
+        {formError && <p className="form-error">{formError}</p>}
         <div className="form-group">
           <label>Your name:</label>
           <input
             name="name"
             value={formData.name}
             onChange={handleChange}
-            required
           />
         </div>
         <div className="form-group">
@@ -57,16 +69,15 @@ const ContactComponent = () => {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            required
           />
         </div>
         <div className="form-group">
           <label>Your message:</label>
-          <input
+          <textarea
             name="message"
             value={formData.message}
             onChange={handleChange}
-            required
+            rows={6}
           />
         </div>
 
