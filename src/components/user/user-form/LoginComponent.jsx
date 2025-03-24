@@ -3,6 +3,7 @@ import { signInFetch } from "../../../core/services/userFetch";
 import { signInAction } from "../UserActions";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import "./UserFormComponent.css"
 
 const LoginComponent = () => {
   const dispatch = useDispatch();
@@ -42,41 +43,39 @@ const LoginComponent = () => {
   };
 
   return (
-    <div>
-      {/* Error message */}
-      {error && <div>{error}</div>}
+<div className="user-form compact">
+  {/* Error message */}
+  {error && <div className="form-error">{error}</div>}
 
-      {/* Username input */}
-      <div>
-        <span>Username: </span>
-        <input
-          type="text"
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
+  <div className="form-group">
+    <label>Username</label>
+    <input
+      type="text"
+      placeholder="Username"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+    />
+  </div>
 
-      {/* Password input */}
-      <div>
-        <span>Password: </span>
-        <input
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
+  <div className="form-group">
+    <label>Password</label>
+    <input
+      type="password"
+      placeholder="Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+    />
+  </div>
 
-      {/* Submit button */}
-      <div>
-        <button onClick={signIn}>Sign in</button>
-      </div>
+  <div className="form-actions">
+    <button onClick={signIn}>Sign in</button>
+  </div>
 
-      {/* Signup link */}
-      <div>
-        <span>Don't have an account yet? </span>
-        <Link to="/signup">Sign up.</Link>
-      </div>
-    </div>
+  <div className="form-footer">
+    <span>Don't have an account yet?</span>
+    <Link to="/signup">Sign up.</Link>
+  </div>
+</div>
   );
 };
 

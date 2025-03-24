@@ -145,7 +145,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
   };
 
   return (
-    <div className="user-form">
+    <div className="user-form wide">
       {error && <div className="form-error">{error}</div>}
       {isUpdating && (
         <div className="form-loader">
