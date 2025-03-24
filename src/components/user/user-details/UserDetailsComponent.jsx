@@ -22,6 +22,7 @@ const UserDetailsComponent = () => {
   const { user, token } = useSelector((state) => state.userReducer);
   const { isEditing } = useSelector((state) => state.globalReducer);
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Load user details from token
   const loadUserDetails = async () => {
@@ -97,11 +98,38 @@ const UserDetailsComponent = () => {
 
   return (
     <div>
+      {/* Modal */}
+        {showDeleteModal && (
+    <div className="modal-overlay">
+      <div className="modal-container">
+        <p className="modal-message">
+          Are you sure you want to delete your account?
+          <br />
+          <span className="modal-warning delete">This action cannot be undone.</span>
+        </p>
+        <div className="modal-actions">
+          <button className="button-solid cancel-button" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </button>
+          <button
+            className="button-solid delete-button"
+            onClick={() => {
+              setShowDeleteModal(false);
+              deleteUserHandler();
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+  {/* Show UserForm if in edit mode */}
       {isEditing ? (
         <UserFormComponent initialData={user} onCancel={handleEditMode} />
       ) : (
         <div className="user-profile">
-          {/* Botón volver */}
+          {/* Back button */}
           <div className="top-row">
             <button className="back-button" onClick={goHome}>
               <img
@@ -113,10 +141,10 @@ const UserDetailsComponent = () => {
             </button>
           </div>
 
-          {/* Foto de perfil */}
+          {/* Profile picture */}
           <img src={user.profilePicture} alt="User profile picture" />
 
-          {/* Info */}
+          {/* User info */}
           <div className="user-info">
             <div>
               <span>Name:</span>
@@ -143,7 +171,13 @@ const UserDetailsComponent = () => {
           {/* Acciones */}
           <div className="user-actions">
             <button onClick={handleEditMode}>Edit my profile</button>
-            <button onClick={deleteUserHandler}>Delete my account</button>
+            <button
+              onClick={() => {
+                setShowDeleteModal(true);
+              }}
+            >
+              Delete my account
+            </button>
           </div>
         </div>
       )}

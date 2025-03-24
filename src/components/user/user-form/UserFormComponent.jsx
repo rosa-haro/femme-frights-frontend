@@ -15,6 +15,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
   const [formUserInfo, setFormUserInfo] = useState(initialData || {});
   const [error, setError] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     if (initialData) setFormUserInfo(initialData);
@@ -136,7 +137,13 @@ const UserFormComponent = ({ initialData, onCancel }) => {
         }
 
         dispatch(signUpAction(userInfo));
-        goHome();
+        setShowSuccessModal(true);
+
+        // Redirects to HOME after 2 seconds
+        setTimeout(() => {
+          setShowSuccessModal(false);
+          goHome();
+        }, 3000);
       }
     } catch (error) {
       setIsUpdating(false);
@@ -150,6 +157,27 @@ const UserFormComponent = ({ initialData, onCancel }) => {
       {isUpdating && (
         <div className="form-loader">
           <ClipLoader color="#888" size={30} />
+        </div>
+      )}
+
+      {/* Registration success modal */}
+      {showSuccessModal && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <p className="modal-message">
+              Registration successful!
+              <span className="modal-warning">Redirecting to homepage...</span>
+            </p>
+            <div className="modal-actions">
+              <button
+                className="button-solid"
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  goHome();
+                }}
+              >OK</button>
+            </div>
+          </div>
         </div>
       )}
 

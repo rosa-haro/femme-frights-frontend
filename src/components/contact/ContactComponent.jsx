@@ -12,10 +12,12 @@ const ContactComponent = () => {
 
   const [status, setStatus] = useState("");
 
+  // Handle form input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle submit event
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
@@ -34,6 +36,7 @@ const ContactComponent = () => {
       setStatus("error");
     }
   };
+  
   return (
     <div className="contact-form">
       <h2>Contact Us</h2>

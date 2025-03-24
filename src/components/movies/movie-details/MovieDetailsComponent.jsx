@@ -61,6 +61,7 @@ const MovieDetailsComponent = () => {
     return `${hours}h ${minutes}min`;
   };
 
+  // Spinner if loading
   if (loading || !selectedMovie) {
     return (
       <div className="movie-details">
@@ -101,6 +102,7 @@ const MovieDetailsComponent = () => {
             <span>Main cast: {selectedMovie.mainCast.join(", ")}</span>
             <span>Overview: {selectedMovie.overview}</span>
 
+            {/* Action buttons */}
             {isLogged && (
               <div className="actions">
                 <button onClick={() => handleToggleFavorite(selectedMovie._id)}>
