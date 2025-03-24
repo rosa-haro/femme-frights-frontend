@@ -3,16 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   deleteLoggedUserFetch,
   getUserByIdFetch,
-} from "../../core/services/userFetch";
+} from "../../../core/services/userFetch";
 import {
   deleteUserAction,
   getUserDetailsAction,
   signOutAction,
-} from "./UserActions";
+} from "../UserActions";
 import { useNavigate } from "react-router-dom";
-import { activateEditMode } from "../../core/redux/reducers/global/GlobalActions";
-import UserFormComponent from "./UserFormComponent";
+import { activateEditMode } from "../../../core/redux/reducers/global/GlobalActions";
+import UserFormComponent from "../user-form/UserFormComponent";
 import { ClipLoader } from "react-spinners";
+import "./UserDetailsComponent.css"
 
 const UserDetailsComponent = () => {
   const dispatch = useDispatch();
@@ -91,44 +92,32 @@ const UserDetailsComponent = () => {
       {isEditing ? (
         <UserFormComponent initialData={user} onCancel={handleEditMode} />
       ) : (
-        <div>
-          {/* Profile picture */}
-          <div>
-            <img src={user.profilePicture} alt="User profile picture" />
-          </div>
+        <div className="user-profile">
+  {/* Botón volver */}
+  <div className="top-row">
+    <button className="back-button" onClick={goHome}>
+      <img src="/icons/left-arrow.svg" alt="Back" width={20} height={20} />
+    </button>
+  </div>
 
-          {/* User info */}
-          <div>
-            <span>Name: </span>
-            <span>{user.name}</span>
-          </div>
+  {/* Foto de perfil */}
+  <img src={user.profilePicture} alt="User profile picture" />
 
-          <div>
-            <span>Last name: </span>
-            <span>{user.lastName}</span>
-          </div>
+  {/* Info */}
+  <div className="user-info">
+    <div><span>Name:</span><span>{user.name}</span></div>
+    <div><span>Last name:</span><span>{user.lastName}</span></div>
+    <div><span>Username:</span><span>{user.username}</span></div>
+    <div><span>Email:</span><span>{user.email}</span></div>
+    <div><span>Password:</span><span>{"•".repeat(8)}</span></div>
+  </div>
 
-          <div>
-            <span>Username: </span>
-            <span>{user.username}</span>
-          </div>
-
-          <div>
-            <span>Email: </span>
-            <span>{user.email}</span>
-          </div>
-
-          <div>
-            <span>Password: </span>
-            <span>{"•".repeat(8)}</span>
-          </div>
-
-          {/* Action buttons */}
-          <div>
-            <button onClick={handleEditMode}>Edit my profile</button>
-            <button onClick={deleteUserHandler}>Delete my account</button>
-          </div>
-        </div>
+  {/* Acciones */}
+  <div className="user-actions">
+    <button onClick={handleEditMode}>Edit my profile</button>
+    <button onClick={deleteUserHandler}>Delete my account</button>
+  </div>
+</div>
       )}
     </div>
   );

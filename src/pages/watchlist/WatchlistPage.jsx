@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import MovieListComponent from "../../components/movies/MovieListComponent";
-import BrowserComponent from "../../components/browser/BrowserComponent";
-import PagerComponent from "../../components/browser/PagerComponent";
+import MovieListComponent from "../../components/movies/movie-list/MovieListComponent";
 
 const WatchlistPage = () => {
   return (
     <div>
-      <BrowserComponent />
       <MovieListComponent />
-      <PagerComponent />
     </div>
   );
 };

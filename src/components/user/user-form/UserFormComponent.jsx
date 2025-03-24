@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { signUpFetch, updateUserFetch } from "../../core/services/userFetch";
-import { signUpAction, updateUserAction } from "./UserActions";
+import { signUpFetch, updateUserFetch } from "../../../core/services/userFetch";
+import { signUpAction, updateUserAction } from "../UserActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { activateEditMode } from "../../core/redux/reducers/global/GlobalActions";
+import { activateEditMode } from "../../../core/redux/reducers/global/GlobalActions";
 import { ClipLoader } from "react-spinners";
+import "./UserFormComponent.css";
 
 const UserFormComponent = ({ initialData, onCancel }) => {
   const dispatch = useDispatch();
@@ -144,93 +145,96 @@ const UserFormComponent = ({ initialData, onCancel }) => {
   };
 
   return (
-    <div>
-      {error && <div>{error}</div>}
-
+    <div className="user-form wide">
+      {error && <div className="form-error">{error}</div>}
       {isUpdating && (
-        <div>
-          <ClipLoader color="#444" size={30} />
+        <div className="form-loader">
+          <ClipLoader color="#888" size={30} />
         </div>
       )}
 
-      <div>
-        <span>Name (*): </span>
+      <div className="form-group">
+        <label>Name{!initialData && " (*)"}</label>
         <input
           type="text"
-          placeholder="Name"
           name="name"
+          placeholder="Name"
           value={formUserInfo.name || ""}
           onChange={handleInputChange}
         />
       </div>
 
-      <div>
-        <span>Last name (*): </span>
+      <div className="form-group">
+        <label>Last name{!initialData && " (*)"}</label>
         <input
           type="text"
-          placeholder="Lastname"
           name="lastName"
+          placeholder="Last name"
           value={formUserInfo.lastName || ""}
           onChange={handleInputChange}
         />
       </div>
 
-      <div>
-        <span>Username (*): </span>
+      <div className="form-group">
+        <label>Username{!initialData && " (*)"}</label>
         <input
           type="text"
-          placeholder="Username"
           name="username"
+          placeholder="Username"
           value={formUserInfo.username || ""}
           onChange={handleInputChange}
         />
       </div>
 
-      <div>
-        <span>E-mail (*): </span>
+      <div className="form-group">
+        <label>Email{!initialData && " (*)"}</label>
         <input
           type="email"
-          placeholder="Email"
           name="email"
+          placeholder="Email"
           value={formUserInfo.email || ""}
           onChange={handleInputChange}
         />
       </div>
 
-      <div>
-        <span>Password: </span>
+      <div className="form-group">
+        <label>Password{!initialData && " (*)"}</label>
         <input
           type="password"
-          placeholder="Password"
           name="password"
+          placeholder="New password"
           onChange={handleInputChange}
         />
       </div>
 
-      <div>
-        <span>Profile picture (**): </span>
+      <div className="form-group">
+        <label>Profile picture{initialData && " (*)"}</label>
         <input type="file" accept="image/*" onChange={handleProfilePicture} />
       </div>
 
-      <div>
-        <p>(*) These fields cannot be empty.</p>
-        <p>
-          (**) You may need to refresh the page to see changes in your profile
-          picture.
-        </p>
+      <div className="form-note">
+        {initialData ? (
+          <p>(*) Updating profile picture may require refreshing the page.</p>
+        ) : (
+          <p>All (*) fields are required.</p>
+        )}
       </div>
 
-      <div>
+      <div className="form-actions">
         <button onClick={handleSubmit}>
-          {initialData ? "Save Changes" : "Sign up"}
+          {initialData ? "Save changes" : "Sign up"}
         </button>
-        {initialData && <button onClick={onCancel}>Cancel</button>}
+        {initialData && (
+          <button className="button-secondary" onClick={onCancel}>
+            Cancel
+          </button>
+        )}
       </div>
 
       {!initialData && (
-        <div>
-          <span>Already have an account? </span>
-          <Link to="/signin">Sign in.</Link>
+        <div className="form-footer">
+          <span>Already have an account?</span>
+          <Link to="/signin">Sign in</Link>
         </div>
       )}
     </div>

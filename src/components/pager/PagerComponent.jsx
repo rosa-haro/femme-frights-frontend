@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPageAction } from "../movies/MoviesActions";
+import "./PagerComponent.css"
 
 const PagerComponent = () => {
   const dispatch = useDispatch();
@@ -8,7 +9,7 @@ const PagerComponent = () => {
     (state) => state.moviesReducer
   );
 
-  const moviesPerPage = 6;
+  const moviesPerPage = 12;
 
   // Select the list to paginate: search results or active list (favlist, wachlist, general)
   const list =
@@ -54,7 +55,7 @@ const PagerComponent = () => {
   };
 
   return (
-    <div>
+    <div className="pager">
       {/* Previous button */}
       <button
         onClick={() => handleClick(currentPage - 1)}

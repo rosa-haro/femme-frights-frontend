@@ -3,6 +3,7 @@ import NavMenuComponent from "../menu/NavMenuComponent";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutAction } from "../user/UserActions";
+import "./HeaderComponent.css";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
@@ -30,22 +31,31 @@ const HeaderComponent = () => {
   return (
     <header>
       <div>
-        {/* Logo image (loaded from URL for later deployment) */}
+        {/* Logo image (loaded from URL for Vite compatibility in later deployment) */}
         <img
           src={new URL("../../../public/logo.png", import.meta.url).href}
           alt="Femme Frights logo"
         />
-        <h1>Femme Frights</h1>
+        <div className="header-titles">
+          <h1>Femme Frights</h1>
+          <h2 className="subtitle">Horror movies directed by women</h2>
+        </div>
 
         {/* Sign in/out button */}
-        <button onClick={isLogged ? signOutHandler : goToSignIn}>
+        <button
+          onClick={isLogged ? signOutHandler : goToSignIn}
+          className="button-solid"
+        >
           {isLogged ? "Sign Out" : "Sign In"}
         </button>
       </div>
 
       <div>
         {/* Greeting message */}
-        <span>{isLogged ? `Hi, ${user.name}!` : null}</span>
+        <div className="user-status">
+          <span className="status-indicator" title="Online" />
+          <span>{`Hi, ${user.name}!`}</span>
+        </div>
 
         {/* Navigation menu */}
         <NavMenuComponent />

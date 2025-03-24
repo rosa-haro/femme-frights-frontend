@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loadAllMoviesAction, setCurrentPageAction } from "./MoviesActions";
-import { getAllMoviesFetch } from "../../core/services/moviesFetch";
-import { getUserByIdFetch } from "../../core/services/userFetch";
-import { getUserDetailsAction, signOutAction } from "../user/UserActions";
-import useToggleMovie from "../../core/hooks/useToggleMovie";
 import { ClipLoader } from "react-spinners";
+import { getAllMoviesFetch } from "../../../core/services/moviesFetch";
+import { loadAllMoviesAction, setCurrentPageAction } from "../MoviesActions";
+import useToggleMovie from "../../../core/hooks/useToggleMovie";
+import { getUserByIdFetch } from "../../../core/services/userFetch";
+import { getUserDetailsAction, signOutAction } from "../../user/UserActions";
+import "./MovieListComponent.css";
 
 const MovieListComponent = () => {
   const navigate = useNavigate();
@@ -31,13 +32,18 @@ const MovieListComponent = () => {
   // Load movies (and user data if logged) when on Home
   useEffect(() => {
     if (location.pathname === "/") {
+      setLoading(true);
       loadAllMovies();
+    } else {
+      setLoading(false);
     }
+  }, [location.pathname]);
 
+  useEffect(() => {
     if (isLogged && token) {
       loadUserInfo();
     }
-  }, [location.pathname, isLogged, token, dispatch]);
+  }, [isLogged, token]);
 
   const loadAllMovies = async () => {
     setLoading(true);
@@ -69,7 +75,7 @@ const MovieListComponent = () => {
       ? activeList
       : [];
 
-  const moviesPerPage = 6;
+  const moviesPerPage = 12;
   const totalPages = Math.ceil(list.length / moviesPerPage);
 
   // Reset current page if not valid
@@ -120,9 +126,9 @@ const MovieListComponent = () => {
   }
 
   return (
-    <div>
+    <div className="movie-list">
       {paginatedMovies.map((m) => (
-        <div key={m._id}>
+        <div className="movie-card" key={m._id}>
           {/* Movie poster */}
           <div>
             {!imageLoaded[m._id] && (
@@ -147,43 +153,52 @@ const MovieListComponent = () => {
               </a>
             </figcaption>
           </div>
+          {/* Movie info */}
+          <h3>{m.titleEnglish}</h3>
+          {m.titleEnglish !== m.titleOriginal && (
+            <div className="info">({m.titleOriginal})</div>
+          )}
 
-          {/* Movie details */}
-          <div>
-            <span>{m.titleEnglish}</span>
-            {m.titleEnglish !== m.titleOriginal && (
-              <span> ({m.titleOriginal})</span>
-            )}
-          </div>
+          <div className="info">Year: {m.year}</div>
+          <div className="info">Director: {m.director}</div>
+          <div className="actions">
+  <button className="details" onClick={() => goToDetails(m._id)}>
+    Details
+  </button>
 
-          <div>
-            <span>Year: </span>
-            <span>{m.year}</span>
-          </div>
+  {isLogged && (
+    <div className="icon-buttons">
+      <button className="button"
+        onClick={() => handleToggleFavorite(m._id)}
+      >
+        <img
+          src={
+            isFavorite(m._id)
+              ? "/icons/remove-favorite.svg"
+              : "/icons/add-favorite.svg"
+          }
+          alt="Favorite"
+          width={20}
+          height={20}
+        />
+      </button>
 
-          <div>
-            <span>Director: </span>
-            <span>{m.director}</span>
-          </div>
-
-          {/* Action buttons (if user logged) */}
-          <div>
-            <button onClick={() => goToDetails(m._id)}>Details</button>
-
-            {isLogged && (
-              <>
-                <button onClick={() => handleToggleFavorite(m._id)}>
-                  {isFavorite(m._id)
-                    ? "Remove from favorites"
-                    : "Add to favorites"}
-                </button>
-
-                <button onClick={() => handleToggleWatchlist(m._id)}>
-                  {isInWatchlist(m._id)
-                    ? "Remove from watchlist"
-                    : "Add to watchlist"}
-                </button>
-              </>
+      <button
+       className="button"
+        onClick={() => handleToggleWatchlist(m._id)}
+      >
+        <img
+          src={
+            isInWatchlist(m._id)
+              ? "/icons/remove-watchlist.svg"
+              : "/icons/add-watchlist.svg"
+          }
+          alt="Watchlist"
+          width={20}
+          height={20}
+        />
+      </button>
+    </div>
             )}
           </div>
         </div>
