@@ -1,6 +1,7 @@
 .movie-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(4, 220px);
+  justify-content: center;
   gap: 2rem;
   margin-top: 2rem;
 }
@@ -93,4 +94,28 @@
 
 .movie-card .icon-buttons .button:hover {
   opacity: 0.7;
+}
+
+.empty-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+/* For smaller screens (otherwise the grid will overflow) */
+@media (max-width: 950px) {
+  .movie-list {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    padding: 0 1rem;
+  }
+}
+
+/* To hide caption in smaller screens */
+@media (max-width: 600px) {
+  .movie-card figcaption {
+    display: none;
+  }
 }

@@ -111,15 +111,17 @@ const MovieListComponent = () => {
   // Show message if list is empty
   if (paginatedMovies.length === 0) {
     return (
-      <p>
-        {isSearching
-          ? "No search results."
-          : location.pathname === "/"
-          ? "No movies to show"
-          : location.pathname === "/favorites"
-          ? "Your favorites list is empty."
-          : "Your watchlist is empty."}
-      </p>
+      <div className="empty-message">
+        <p>
+          {isSearching
+            ? "No search results."
+            : location.pathname === "/"
+            ? "No movies to show"
+            : location.pathname === "/favorites"
+            ? "Your favorites list is empty."
+            : "Your watchlist is empty."}
+        </p>
+      </div>
     );
   }
 
