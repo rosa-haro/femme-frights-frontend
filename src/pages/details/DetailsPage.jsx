@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import MovieDetailsComponent from "../../components/movies/movie-details/MovieDetailsComponent";
 
 const DetailsPage = () => {
   return (
-    <div>DetailsPage</div>
-  )
-}
+    <div>
+      <MovieDetailsComponent />
+    </div>
+  );
+};
 
-export default DetailsPage
+export default DetailsPage;

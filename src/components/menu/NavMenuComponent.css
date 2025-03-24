@@ -1,0 +1,15 @@
+nav {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  nav .button {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  nav .button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }

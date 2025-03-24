@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import UserFormComponent from "../../components/user/user-form/UserFormComponent";
 
 const SignupPage = () => {
   return (
-    <div>SignupPage</div>
-  )
-}
+    <div>
+      <UserFormComponent />
+    </div>
+  );
+};
 
-export default SignupPage
+export default SignupPage;

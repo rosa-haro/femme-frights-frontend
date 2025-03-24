@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import UserDetailsComponent from "../../components/user/user-details/UserDetailsComponent";
 
 const ProfilePage = () => {
   return (
-    <div>ProfilePage</div>
-  )
-}
+    <div>
+      <UserDetailsComponent />
+    </div>
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;
