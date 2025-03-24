@@ -105,7 +105,7 @@ const UserDetailsComponent = () => {
         <p className="modal-message">
           Are you sure you want to delete your account?
           <br />
-          <span className="modal-warning">This action cannot be undone.</span>
+          <span className="modal-warning delete">This action cannot be undone.</span>
         </p>
         <div className="modal-actions">
           <button className="button-solid cancel-button" onClick={() => setShowDeleteModal(false)}>
