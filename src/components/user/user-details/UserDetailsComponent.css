@@ -62,8 +62,23 @@
   
   .top-row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1rem;
+  }
+
+  .profile-title {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .button-placeholder {
+    width: 35px; 
+    height: 35px;
   }
   
   .back-button {
@@ -89,6 +104,3 @@
     opacity: 0.7;
     text-decoration: underline;
   }
-
- 
-  

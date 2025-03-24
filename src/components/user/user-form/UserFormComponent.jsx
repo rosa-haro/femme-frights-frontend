@@ -180,7 +180,7 @@ const UserFormComponent = ({ initialData, onCancel }) => {
           </div>
         </div>
       )}
-
+      <h2>Sign up</h2>
       <div className="form-group">
         <label>Name{!initialData && " (*)"}</label>
         <input
