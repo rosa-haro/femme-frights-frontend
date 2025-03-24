@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getMovieById } from "../../../core/services/moviesFetch";
 import { loadOneMovieAction } from "../MoviesActions";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useToggleMovie from "../../../core/hooks/useToggleMovie";
 import { ClipLoader } from "react-spinners";
+import "./MovieDetailsComponent.css"
 
 const MovieDetailsComponent = () => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const { state } = location;
   const { _id } = state;
 
@@ -38,6 +40,11 @@ const MovieDetailsComponent = () => {
     }
   };
 
+  // Navigate home
+  const goHome = () => {
+    navigate("/")
+  }
+
   // Format duration
   const formatDuration = (duration) => {
     if (
@@ -53,70 +60,62 @@ const MovieDetailsComponent = () => {
 
   if (loading || !selectedMovie) {
     return (
-      <div>
+      <div className="movie-details">
         <ClipLoader color="#444" size={50} />
       </div>
     );
   }
 
   return (
-    <div>
-      {/* Poster */}
-      <div>
-        {!imageLoaded && (
-          <div>
-            <ClipLoader color="#888" size={30} />
-          </div>
-        )}
-        <img
-          src={selectedMovie.poster}
-          alt="Movie poster"
-          onLoad={() => setImageLoaded(true)}
-          style={{ display: imageLoaded ? "block" : "none" }}
-        />
-        <figcaption>
-          Image provided by{" "}
-          <a
-            href="https://www.themoviedb.org/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            TMDb
-          </a>
-        </figcaption>
-      </div>
+    <div className="movie-details-wrapper">
+    <div className="movie-details">
 
-      {/* Info */}
-      <div>
-        <span>{selectedMovie.titleEnglish}</span>
-        {selectedMovie.titleEnglish !== selectedMovie.titleOriginal && (
-          <span> (Original: {selectedMovie.titleOriginal})</span>
-        )}
-      </div>
 
-      <div>
-        <span>{selectedMovie.year} | </span>
-        <span>{formatDuration(selectedMovie.duration)}</span>
-      </div>
-
-      <div>
-        <span>Directed by: </span>
-        <span>{selectedMovie.director}</span>
-      </div>
-
-      <div>
-        <span>Main cast: </span>
-        <span>{selectedMovie.mainCast.join(", ")}</span>
-      </div>
-
-      <div>
-        <span>Overview: </span>
-        <span>{selectedMovie.overview}</span>
-      </div>
-
-      {/* Buttons (only visible if the user is logged) */}
-      {isLogged && (
+<div className="movie-details-body">
+    {/* Poster */}
+    <div className="poster">
+      {!imageLoaded && (
         <div>
+          <ClipLoader color="#888" size={30} />
+        </div>
+      )}
+      <img
+        src={selectedMovie.poster}
+        alt="Movie poster"
+        onLoad={() => setImageLoaded(true)}
+        style={{ display: imageLoaded ? "block" : "none" }}
+      />
+      <figcaption>
+        Image provided by{" "}
+        <a
+          href="https://www.themoviedb.org/"
+          target="_blank"
+        >
+          TMDb
+        </a>
+      </figcaption>
+    </div>
+
+    {/* Info */}
+    <div className="info">
+    <div className="top-row">
+    <button className="back-button" onClick={goHome}>
+  <img src="/icons/left-arrow.svg" alt="Back" width={25} height={25} />
+</button>
+</div>
+      <span className="title">{selectedMovie.titleEnglish}</span>
+      {selectedMovie.titleEnglish !== selectedMovie.titleOriginal && (
+        <span>(Original: {selectedMovie.titleOriginal})</span>
+      )}
+      <span>
+        {selectedMovie.year} | {formatDuration(selectedMovie.duration)}
+      </span>
+      <span>Directed by: {selectedMovie.director}</span>
+      <span>Main cast: {selectedMovie.mainCast.join(", ")}</span>
+      <span>Overview: {selectedMovie.overview}</span>
+
+      {isLogged && (
+        <div className="actions">
           <button onClick={() => handleToggleFavorite(selectedMovie._id)}>
             {isFavorite(selectedMovie._id)
               ? "Remove from favorites"
@@ -131,6 +130,9 @@ const MovieDetailsComponent = () => {
         </div>
       )}
     </div>
+  </div>
+  </div>
+  </div>
   );
 };
 

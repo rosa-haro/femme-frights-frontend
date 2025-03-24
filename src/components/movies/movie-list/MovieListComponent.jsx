@@ -162,35 +162,43 @@ const MovieListComponent = () => {
           <div className="info">Year: {m.year}</div>
           <div className="info">Director: {m.director}</div>
           <div className="actions">
-            <button className="details" onClick={() => goToDetails(m._id)}>
-              Details
-            </button>
+  <button className="details" onClick={() => goToDetails(m._id)}>
+    Details
+  </button>
 
-            {/* Action buttons (only if logged) */}
-            {isLogged && (
-              <div>
-                <button
-                  className={`button-outline ${
-                    isFavorite(m._id) ? "active" : ""
-                  }`}
-                  onClick={() => handleToggleFavorite(m._id)}
-                >
-                  {isFavorite(m._id)
-                    ? "Remove from favorites"
-                    : "Add to favorites"}
-                </button>
+  {isLogged && (
+    <div className="icon-buttons">
+      <button className="button"
+        onClick={() => handleToggleFavorite(m._id)}
+      >
+        <img
+          src={
+            isFavorite(m._id)
+              ? "/icons/remove-favorite.svg"
+              : "/icons/add-favorite.svg"
+          }
+          alt="Favorite"
+          width={20}
+          height={20}
+        />
+      </button>
 
-                <button
-                  className={`button-outline ${
-                    isInWatchlist(m._id) ? "active" : ""
-                  }`}
-                  onClick={() => handleToggleWatchlist(m._id)}
-                >
-                  {isInWatchlist(m._id)
-                    ? "Remove from watchlist"
-                    : "Add to watchlist"}
-                </button>
-              </div>
+      <button
+       className="button"
+        onClick={() => handleToggleWatchlist(m._id)}
+      >
+        <img
+          src={
+            isInWatchlist(m._id)
+              ? "/icons/remove-watchlist.svg"
+              : "/icons/add-watchlist.svg"
+          }
+          alt="Watchlist"
+          width={20}
+          height={20}
+        />
+      </button>
+    </div>
             )}
           </div>
         </div>

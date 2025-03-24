@@ -19,7 +19,6 @@ const MainLayout = (props) => {
     if (!token || token === "undefined" || token.trim() === "") {
       dispatch(signOutAction());
       localStorage.removeItem("token");
-      setLoading(false);
       return;
     }
 
