@@ -42,10 +42,12 @@ const UserDetailsComponent = () => {
   };
 
   useEffect(() => {
-    if (token) {
+    if (!token) {
+      setLoading(false);
+    } else{
       loadUserDetails();
     }
-  }, []);
+  }, [token]);
 
   const goHome = () => {
     navigate("/");
