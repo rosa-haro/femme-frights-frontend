@@ -8,7 +8,7 @@ A React-based application for **FemmeFrights**, a project about horror movies di
 ## 🌟 Features
 
 - 🏠 Home, Favorites & Watchlist views
-- 🔍 Search by titll & Sort by title or year (they can be combined)
+- 🔍 Search by title & Sort by title or year (they can be combined)
 - 💾 User Sign Up, Login, and Profile Editing
 - 🖼️ Profile picture upload and update with preview
 - ❤️ Add/remove movies as Favorites to Watchlist
