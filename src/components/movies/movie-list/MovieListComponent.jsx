@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import {
   getAllMoviesFetch,
-  getTMDBPosterUrl,
 } from "../../../core/services/moviesFetch";
 import { loadAllMoviesAction, setCurrentPageAction } from "../MoviesActions";
 import useToggleMovie from "../../../core/hooks/useToggleMovie";
@@ -30,9 +29,7 @@ const MovieListComponent = () => {
   } = useToggleMovie();
   const { token } = useSelector((state) => state.userReducer);
 
-  const [imageLoaded, setImageLoaded] = useState({});
   const [loading, setLoading] = useState(true);
-  const [posterUrls, setPosterUrls] = useState({});
 
   // Load movies (and user data if logged) when on Home
   useEffect(() => {
@@ -100,34 +97,7 @@ const MovieListComponent = () => {
     return list.slice(indexOfFirst, indexOfLast);
   }, [list, currentPage]);
 
-  // Load movie posters (the ones in the current page)
-  useEffect(() => {
-    const loadPosters = async () => {
-      const posters = {};
-      await Promise.all(
-        paginatedMovies.map(async (m) => {
-          console.log("➡️ Buscando póster para:", m.titleEnglish);
-          console.log("🆔 TMDB ID recibido:", m.poster);
-          const url = await getTMDBPosterUrl(m.poster);
-          console.log("✅ URL del póster obtenido:", url);
-          posters[m._id] = url;
-        })
-      );
-      setPosterUrls(posters);
-    };
-
-    if (paginatedMovies.length > 0) {
-      loadPosters();
-    }
-  }, [paginatedMovies]);
-
   const isSearching = hasSearched && searchResults?.length === 0;
-
-  // Handle image load state
-  const handleImageLoad = (id) => {
-    const aux = { ...imageLoaded, [id]: true };
-    setImageLoaded(aux);
-  };
 
   // Show loading spinner while fetching movies
   if (loading) {
@@ -159,7 +129,6 @@ const MovieListComponent = () => {
         <div className="movie-card" key={m._id}>
           {/* Movie poster */}
           <MoviePosterComponent tmdbId={m.poster} />
-          
 
           {/* Movie info */}
           <h3>
@@ -215,7 +184,6 @@ const MovieListComponent = () => {
         </div>
       ))}
     </div>
-  
   );
 };
 

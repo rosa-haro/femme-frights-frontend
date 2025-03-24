@@ -119,14 +119,10 @@ export const sortMoviesByYearDescFetch = async () => {
 
 // Get posters from TMDB Api (+ caché so it doesn't call the API every time it renders)
 export const getTMDBPosterUrl = async (tmdbId) => {
-  console.log("📦 Llamando a TMDB con ID:", tmdbId);
-
   const cacheKey = `tmdb_poster_${tmdbId}`;
   const cachedUrl = sessionStorage.getItem(cacheKey);
 
   if (cachedUrl) {
-    console.log("🗃️ Poster cacheado:", cachedUrl);
-
     return cachedUrl;}
 
   try {

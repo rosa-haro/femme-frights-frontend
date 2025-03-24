@@ -19,7 +19,7 @@ const MoviePosterComponent = ({ tmdbId }) => {
     return (
       <div style={{ position: "relative" }}>
         {!loaded && (
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+          <div>
             <ClipLoader color="#888" size={30} />
           </div>
         )}
@@ -31,16 +31,10 @@ const MoviePosterComponent = ({ tmdbId }) => {
             e.target.src = "/fallback-poster.jpg";
             setLoaded(true);
           }}
-          style={{
-            opacity: loaded ? 1 : 0,
-            transition: "opacity 0.3s ease-in-out",
-            width: "100%",
-            borderRadius: "8px",
-          }}
         />
         <figcaption>
           Image provided by{" "}
-          <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">
+          <a href="https://www.themoviedb.org/" target="_blank">
             TMDb
           </a>
         </figcaption>

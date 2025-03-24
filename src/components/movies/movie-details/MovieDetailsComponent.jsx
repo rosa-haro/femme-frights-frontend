@@ -75,7 +75,7 @@ const MovieDetailsComponent = () => {
         <div className="movie-details-body">
           {/* Poster */}
           <div className="poster">
-          <MoviePosterComponent tmdbId={selectedMovie.poster} />
+            <MoviePosterComponent tmdbId={selectedMovie.poster} />
           </div>
 
           {/* Info */}
