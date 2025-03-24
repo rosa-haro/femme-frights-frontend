@@ -1,0 +1,91 @@
+.user-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  background-color: var(--color-surface);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  color: var(--color-text);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-group input {
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  border: none;
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.form-group input[type="file"] {
+  padding: 0.2rem;
+}
+
+.form-error {
+  color: #ff7b7b;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-note {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  line-height: 1.4;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.user-form button {
+  background-color: var(--color-highlight);
+  color: var(--color-text);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background-color 0.2s;
+  font-size: 0.95rem;
+}
+
+.user-form button:hover {
+  background-color: #a0148b;
+}
+
+.button-secondary {
+  background-color: var(--color-muted);
+}
+
+.button-secondary:hover {
+  background-color: var(--color-highlight);
+  color: var(--color-bg);
+}
+
+.form-footer {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.form-footer a {
+  color: var(--color-highlight);
+  margin-left: 0.3rem;
+}
