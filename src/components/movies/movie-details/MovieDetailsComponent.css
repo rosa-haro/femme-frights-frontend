@@ -107,6 +107,14 @@
   cursor: pointer;
   transition: background-color 0.2s;
   font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.movie-details .actions button img {
+  width: 20px;
+  height: 20px;
 }
 
 .movie-details .actions button:hover {

@@ -8,9 +8,9 @@ header {
   }
   
   header img {
-    width: 60px;
+    width: 80px;
     height: auto;
-    margin-right: 0.3rem;
+    margin-right: 0.5rem;
   }
   
   header h1 {
@@ -36,4 +36,56 @@ header {
     font-size: 0.9rem;
     color: var(--color-text);
     opacity: 0.8;
+  }
+
+  .header-titles {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.2;
+  }  
+
+  .subtitle {
+    font-size: 1.1rem;
+    font-weight: 200;
+    color: var(--color-text);
+    opacity: 0.7;
+  }
+
+  .user-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: #00c853; 
+    border-radius: 50%;
+    box-shadow: 0 0 5px #00c853;
+  }
+  
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: #00c853;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #00c853;
+    animation: pulse 1.7s infinite ease-in-out;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 5px #00c853;
+    }
+    50% {
+      transform: scale(1.2);
+      box-shadow: 0 0 10px #00e676;
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 5px #00c853;
+    }
   }
