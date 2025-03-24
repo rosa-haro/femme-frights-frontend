@@ -116,3 +116,33 @@ export const sortMoviesByYearDescFetch = async () => {
     throw error;
   }
 };
+
+// Get posters from TMDB Api (+ caché so it doesn't call the API every time it renders)
+export const getTMDBPosterUrl = async (tmdbId) => {
+  console.log("📦 Llamando a TMDB con ID:", tmdbId);
+
+  const cacheKey = `tmdb_poster_${tmdbId}`;
+  const cachedUrl = sessionStorage.getItem(cacheKey);
+
+  if (cachedUrl) {
+    console.log("🗃️ Poster cacheado:", cachedUrl);
+
+    return cachedUrl;}
+
+  try {
+    const res = await fetch(
+      `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+    );
+    const data = await res.json();
+
+    const url = data.poster_path
+      ? `https://image.tmdb.org/t/p/w342${data.poster_path}`
+      : "/fallback-poster.jpg";
+
+    sessionStorage.setItem(cacheKey, url);
+    return url;
+  } catch (error) {
+    console.error("Error fetching TMDB poster:", error);
+    return "/fallback-poster.jpg";
+  }
+};

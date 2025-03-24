@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMovieById } from "../../../core/services/moviesFetch";
+import {
+  getMovieById,
+  getTMDBPosterUrl,
+} from "../../../core/services/moviesFetch";
 import { loadOneMovieAction } from "../MoviesActions";
 import { useLocation, useNavigate } from "react-router-dom";
 import useToggleMovie from "../../../core/hooks/useToggleMovie";
 import { ClipLoader } from "react-spinners";
 import "./MovieDetailsComponent.css";
+import MoviePosterComponent from "../movie-poster/MoviePosterComponent";
 
 const MovieDetailsComponent = () => {
   const location = useLocation();
@@ -24,7 +28,6 @@ const MovieDetailsComponent = () => {
   } = useToggleMovie();
 
   const [loading, setLoading] = useState(true);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Load movie data
   useEffect(() => {
@@ -72,23 +75,7 @@ const MovieDetailsComponent = () => {
         <div className="movie-details-body">
           {/* Poster */}
           <div className="poster">
-            {!imageLoaded && (
-              <div>
-                <ClipLoader color="#888" size={30} />
-              </div>
-            )}
-            <img
-              src={selectedMovie.poster}
-              alt="Movie poster"
-              onLoad={() => setImageLoaded(true)}
-              style={{ display: imageLoaded ? "block" : "none" }}
-            />
-            <figcaption>
-              Image provided by{" "}
-              <a href="https://www.themoviedb.org/" target="_blank">
-                TMDb
-              </a>
-            </figcaption>
+          <MoviePosterComponent tmdbId={selectedMovie.poster} />
           </div>
 
           {/* Info */}

@@ -52,10 +52,16 @@ const HeaderComponent = () => {
 
       <div>
         {/* Greeting message */}
-        <div className="user-status">
+        {isLogged ? ( 
+<div className="user-status">
           <span className="status-indicator" title="Online" />
-          <span>{`Hi, ${user.name}!`}</span>
+          <span>Hi, {user.name}!</span>
         </div>
+        ) : (
+null
+
+        )}
+        
 
         {/* Navigation menu */}
         <NavMenuComponent />
