@@ -11,7 +11,7 @@ A React-based application for **FemmeFrights**, a project about horror movies di
 - 🔍 Search by title & Sort by title or year (they can be combined)
 - 💾 User Sign Up, Login, and Profile Editing
 - 🖼️ Profile picture upload and update with preview
-- ❤️ Add/remove movies as Favorites to Watchlist
+- ❤️ Add/remove movies as Favorites & to Watchlist
 - 📬 Contact form using EmailJS integration
 - 🔐 JWT-based Auth
 - ✨ Responsive & styled with custom CSS
@@ -85,7 +85,7 @@ cd femme-frights-frontend
 npm install
 ```
 
-3. **Create a `.env` file** and set your values:
+3. **Create a `.env` file** based on the provided .env.example:
 ```bash
 VITE_API_URL=http://localhost:3500
 VITE_TMDB_API_KEY=c53aad4c6400e1a6cfc810346741763e
