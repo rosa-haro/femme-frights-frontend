@@ -23,7 +23,7 @@ const UserDetailsComponent = () => {
   const { isEditing } = useSelector((state) => state.globalReducer);
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);  // New state for image loading
+  const [imageLoaded, setImageLoaded] = useState(false);  // State for image loading
 
   // Load user details from token
   const loadUserDetails = async () => {
@@ -39,7 +39,7 @@ const UserDetailsComponent = () => {
       dispatch(signOutAction());
       localStorage.removeItem("token");
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false once data is loaded
     }
   };
 
