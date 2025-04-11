@@ -21,9 +21,9 @@ const UserDetailsComponent = () => {
 
   const { user, token } = useSelector((state) => state.userReducer);
   const { isEditing } = useSelector((state) => state.globalReducer);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);  // User data loading state
+  const [imageLoaded, setImageLoaded] = useState(false);  // Image loading state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);  // State for image loading
 
   // Load user details from token
   const loadUserDetails = async () => {
@@ -39,13 +39,13 @@ const UserDetailsComponent = () => {
       dispatch(signOutAction());
       localStorage.removeItem("token");
     } finally {
-      setLoading(false); // Set loading to false once data is loaded
+      setLoading(false);  // User data loading finished
     }
   };
 
   useEffect(() => {
     if (!token) {
-      setLoading(false);
+      setLoading(false);  // If no token, stop loading immediately
     } else {
       loadUserDetails();
     }
@@ -82,9 +82,10 @@ const UserDetailsComponent = () => {
   }, []);
 
   const handleImageLoad = () => {
-    setImageLoaded(true);  // Set image as loaded when the image is successfully loaded
+    setImageLoaded(true);  // Update state once the image is loaded
   };
 
+  // While loading user data
   if (loading) {
     return (
       <div>
@@ -93,6 +94,7 @@ const UserDetailsComponent = () => {
     );
   }
 
+  // If user not found
   if (!user) {
     return (
       <div>
@@ -155,12 +157,14 @@ const UserDetailsComponent = () => {
 
           {/* Profile picture */}
           <div>
+            {/* Profile image */}
             <img
               src={user.profilePicture}
               alt="User profile picture"
               onLoad={handleImageLoad}  // Trigger image load function
-              style={{ display: imageLoaded ? "block" : "none" }} // Only show the image when it's fully loaded
+              style={{ display: imageLoaded ? "block" : "none" }} // Show image only after loading
             />
+            {/* Show spinner until image is fully loaded */}
             {!imageLoaded && (
               <div className="loading-spinner">
                 <ClipLoader color="#444" size={30} />
