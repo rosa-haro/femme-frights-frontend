@@ -21,8 +21,7 @@ const UserDetailsComponent = () => {
 
   const { user, token } = useSelector((state) => state.userReducer);
   const { isEditing } = useSelector((state) => state.globalReducer);
-  const [loading, setLoading] = useState(true);  // User data loading state
-  const [imageLoaded, setImageLoaded] = useState(false);  // Image loading state
+  const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Load user details from token
@@ -39,13 +38,13 @@ const UserDetailsComponent = () => {
       dispatch(signOutAction());
       localStorage.removeItem("token");
     } finally {
-      setLoading(false);  // User data loading finished
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (!token) {
-      setLoading(false);  // If no token, stop loading immediately
+      setLoading(false);
     } else {
       loadUserDetails();
     }
@@ -81,18 +80,6 @@ const UserDetailsComponent = () => {
     };
   }, []);
 
-  const handleImageLoad = () => {
-    setImageLoaded(true);  // Update state once the image is loaded
-  };
-
-  // Check the image URL and log it for debugging purposes
-  useEffect(() => {
-    if (user && user.profilePicture) {
-      console.log("Profile Picture URL:", user.profilePicture);
-    }
-  }, [user]);
-
-  // While loading user data
   if (loading) {
     return (
       <div>
@@ -101,7 +88,6 @@ const UserDetailsComponent = () => {
     );
   }
 
-  // If user not found
   if (!user) {
     return (
       <div>
@@ -113,44 +99,39 @@ const UserDetailsComponent = () => {
   return (
     <div>
       {/* Modal */}
-      {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-container">
-            <p className="modal-message">
-              Are you sure you want to delete your account?
-              <br />
-              <span className="modal-warning delete">
-                This action cannot be undone.
-              </span>
-            </p>
-            <div className="modal-actions">
-              <button
-                className="button-solid cancel-button"
-                onClick={() => setShowDeleteModal(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="button-solid delete-button"
-                onClick={() => {
-                  setShowDeleteModal(false);
-                  deleteUserHandler();
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
+        {showDeleteModal && (
+    <div className="modal-overlay">
+      <div className="modal-container">
+        <p className="modal-message">
+          Are you sure you want to delete your account?
+          <br />
+          <span className="modal-warning delete">This action cannot be undone.</span>
+        </p>
+        <div className="modal-actions">
+          <button className="button-solid cancel-button" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </button>
+          <button
+            className="button-solid delete-button"
+            onClick={() => {
+              setShowDeleteModal(false);
+              deleteUserHandler();
+            }}
+          >
+            Delete
+          </button>
         </div>
-      )}
-      {/* Show UserForm if in edit mode */}
+      </div>
+    </div>
+  )}
+  {/* Show UserForm if in edit mode */}
       {isEditing ? (
         <UserFormComponent initialData={user} onCancel={handleEditMode} />
       ) : (
         <div className="user-profile">
           {/* Back button */}
           <div className="top-row">
-            <div className="button-placeholder" />
+            <div className="button-placeholder"/>
             <h2 className="profile-title">My Profile</h2>
             <button className="back-button" onClick={goHome}>
               <img
@@ -158,27 +139,12 @@ const UserDetailsComponent = () => {
                 alt="Back"
                 width={20}
                 height={20}
-              />
+                />
             </button>
           </div>
 
           {/* Profile picture */}
-          <div>
-            {/* Profile image */}
-            <img
-              src={user.profilePicture}
-              alt="User profile picture"
-              onLoad={handleImageLoad}  // Trigger image load function
-              style={{ display: imageLoaded ? "block" : "none" }} // Show image only after loading
-              onError={(e) => console.error("Image failed to load:", e.target.src)}  // Log error if image fails to load
-            />
-            {/* Show spinner until image is fully loaded */}
-            {!imageLoaded && (
-              <div className="loading-spinner">
-                <ClipLoader color="#444" size={30} />
-              </div>
-            )}
-          </div>
+          <img src={user.profilePicture} alt="User profile picture" />
 
           {/* User info */}
           <div className="user-info">
@@ -204,7 +170,7 @@ const UserDetailsComponent = () => {
             </div>
           </div>
 
-          {/* Actions */}
+          {/* Acciones */}
           <div className="user-actions">
             <button onClick={handleEditMode}>Edit my profile</button>
             <button
