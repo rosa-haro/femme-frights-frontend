@@ -85,6 +85,13 @@ const UserDetailsComponent = () => {
     setImageLoaded(true);  // Update state once the image is loaded
   };
 
+  // Check the image URL and log it for debugging purposes
+  useEffect(() => {
+    if (user && user.profilePicture) {
+      console.log("Profile Picture URL:", user.profilePicture);
+    }
+  }, [user]);
+
   // While loading user data
   if (loading) {
     return (
@@ -163,6 +170,7 @@ const UserDetailsComponent = () => {
               alt="User profile picture"
               onLoad={handleImageLoad}  // Trigger image load function
               style={{ display: imageLoaded ? "block" : "none" }} // Show image only after loading
+              onError={(e) => console.error("Image failed to load:", e.target.src)}  // Log error if image fails to load
             />
             {/* Show spinner until image is fully loaded */}
             {!imageLoaded && (
