@@ -32,10 +32,6 @@ const HeaderComponent = () => {
     <header>
       <div>
         {/* Logo image (loaded from URL for Vite compatibility in later deployment) */}
-        <img
-          src={new URL("../../../public/logo.png", import.meta.url).href}
-          alt="Femme Frights logo"
-        />
         <div className="header-titles">
           <h1>Femme Frights</h1>
           <h2 className="subtitle">Horror movies directed by women</h2>
