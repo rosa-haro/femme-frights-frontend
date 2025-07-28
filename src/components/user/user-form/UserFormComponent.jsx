@@ -111,10 +111,10 @@ const UserFormComponent = ({ initialData, onCancel }) => {
             : updatedData;
 
         setIsUpdating(true);
-        await updateUserFetch(token, dataToSend);
+        const updatedUser = await updateUserFetch(token, dataToSend);
         setIsUpdating(false);
 
-        dispatch(updateUserAction(updatedData));
+        dispatch(updateUserAction(updatedUser));
         dispatch(activateEditMode(false));
       } else {
         // Registration mode
